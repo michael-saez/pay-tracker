@@ -1,0 +1,7 @@
+{
+  "name": "pay-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Michael Saez's UPS pay tracker — static dashboard + password-gated serverless API, deployed on Vercel.",
+  "scripts": {}
+}
