@@ -1,0 +1,188 @@
+{
+  "lastUpdated": "2026-07-01T00:00:00Z",
+  "schemaVersion": 2,
+  "rate": 247.17,
+  "premiums": [
+    {
+      "pp": "2604",
+      "trip": "59488",
+      "date": "2026-03-29",
+      "code": "LP1",
+      "hours": "04:31",
+      "status": "Approved",
+      "memo": "LP1 paid on block 4:31 hrs"
+    },
+    {
+      "pp": "2605",
+      "trip": "A70123R",
+      "date": "2026-05-17",
+      "code": "AP2",
+      "hours": "02:00",
+      "status": "Approved",
+      "memo": "L/O IN SZX"
+    },
+    {
+      "pp": "2606",
+      "trip": "A70123R",
+      "date": "2026-05-19",
+      "code": "LP1",
+      "hours": "09:32",
+      "status": "Approved",
+      "memo": "LP1 pd on block 9:32 hrs"
+    },
+    {
+      "pp": "2606",
+      "trip": "A70577",
+      "date": "2026-05-25",
+      "code": "AP2",
+      "hours": "02:00",
+      "status": "Approved",
+      "memo": "HKG L/O EXTENDED +12 HRS"
+    },
+    {
+      "pp": "2606",
+      "trip": "A70736",
+      "date": "2026-06-13",
+      "code": "AP2",
+      "hours": "02:00",
+      "status": "Approved",
+      "memo": "HKG L/O EXTENDED +12 HRS"
+    },
+    {
+      "pp": "2607",
+      "trip": "A70736",
+      "date": "2026-06-17",
+      "code": "AP2",
+      "hours": "02:00",
+      "status": "Approved",
+      "memo": "EXT HKG L/O — approved, verified #0397610 on 6/23/2026"
+    },
+    {
+      "pp": "2607",
+      "trip": "A70736",
+      "date": "2026-06-19",
+      "code": "AP2",
+      "hours": "02:00",
+      "status": "Approved",
+      "memo": "RSK to OP FO2 14/19Z CGN-SZX for trending overs — approved, verified #0397610 on 6/26/2026"
+    },
+    {
+      "pp": "2607",
+      "trip": "A70736",
+      "date": "2026-06-21",
+      "code": "LP1",
+      "hours": "10:15",
+      "status": "Approved",
+      "memo": "LP1 paid on block 10:15 hrs — approved, verified #0397610 on 6/26/2026"
+    },
+    {
+      "pp": "2607",
+      "trip": "53064",
+      "date": "2026-06-27",
+      "code": "AP2",
+      "hours": "",
+      "status": "Pending",
+      "memo": "EXT SDF L/O > 12 HRS — submitted 6/24/2026, awaiting verification"
+    }
+  ],
+  "hours": [
+    {
+      "pp": "2604",
+      "bid": "2603",
+      "sched": "77:46",
+      "line": "99:01",
+      "pay": "99:01"
+    },
+    {
+      "pp": "2605",
+      "bid": "2603",
+      "sched": "79:44",
+      "line": "110:36",
+      "pay": "110:36"
+    },
+    {
+      "pp": "2606",
+      "bid": "2604",
+      "sched": "80:34",
+      "line": "94:36",
+      "pay": "94:36"
+    },
+    {
+      "pp": "2607",
+      "bid": "2604",
+      "sched": "76:58",
+      "line": "126:59",
+      "pay": "126:59",
+      "note": "Includes picked-up JA trip 53064 (44:21 nominal, pays 150%)"
+    }
+  ],
+  "ja": [
+    {
+      "pp": "2607",
+      "trip": "53064",
+      "date": "2026-06-23",
+      "hours": "44:21",
+      "mult": 1.5,
+      "memo": "JA pickup — ANC-ICN-CGN-PHL-SDF-ANC, 8-day, 747. Credit 44:21 (blk 23:00, duty days 7) paid at 150%."
+    }
+  ],
+  "paychecks": [
+    {
+      "date": "2026-06-01",
+      "net": "14388.92",
+      "status": "match",
+      "base": { "actual": "37:30", "expected": "37:30" },
+      "overage": { "actual": "35:36", "expected": "35:36" },
+      "premium": { "actual": "02:00", "expected": "02:00" },
+      "note": "Reconciled from deposit advice 6.1.pdf — all tracked lines match."
+    },
+    {
+      "date": "2026-06-15",
+      "net": "6613.20",
+      "status": "match",
+      "base": { "actual": "37:30", "expected": "37:30" },
+      "overage": { "actual": "00:00", "expected": "00:00" },
+      "premium": { "actual": "00:00", "expected": "00:00" },
+      "note": "Reconciled from deposit advice 6.15.pdf — base-only check, matches."
+    }
+  ],
+  "checks": [
+    { "date": "2026-01-05", "pp": null, "type": "special", "adjFrom": null, "note": "Sick Buy Off Check" },
+    { "date": "2026-01-12", "pp": "2601", "type": "overage", "adjFrom": "2513", "note": "" },
+    { "date": "2026-01-26", "pp": "2601", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-02-09", "pp": "2602", "type": "overage", "adjFrom": "2601", "note": "" },
+    { "date": "2026-02-23", "pp": "2602", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-03-09", "pp": "2603", "type": "overage", "adjFrom": "2602", "note": "" },
+    { "date": "2026-03-23", "pp": "2603", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-04-06", "pp": "2604", "type": "overage", "adjFrom": "2603", "note": "" },
+    { "date": "2026-04-20", "pp": "2604", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-05-04", "pp": "2605", "type": "overage", "adjFrom": "2604", "note": "" },
+    { "date": "2026-05-18", "pp": "2605", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-06-01", "pp": "2606", "type": "overage", "adjFrom": "2605", "note": "" },
+    { "date": "2026-06-15", "pp": "2606", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-06-29", "pp": "2607", "type": "overage", "adjFrom": "2606", "note": "" },
+    { "date": "2026-07-13", "pp": "2607", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-07-27", "pp": "2608", "type": "overage", "adjFrom": "2607", "note": "" },
+    { "date": "2026-08-10", "pp": "2608", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-08-24", "pp": "2609", "type": "overage", "adjFrom": "2608", "note": "" },
+    { "date": "2026-09-08", "pp": "2609", "type": "base", "adjFrom": null, "note": "Mon holiday — check dated Tue" },
+    { "date": "2026-09-21", "pp": "2610", "type": "overage", "adjFrom": "2609", "note": "" },
+    { "date": "2026-10-05", "pp": "2610", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-10-19", "pp": "2611", "type": "overage", "adjFrom": "2610", "note": "" },
+    { "date": "2026-11-02", "pp": "2611", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-11-16", "pp": "2612", "type": "overage", "adjFrom": "2611", "note": "" },
+    { "date": "2026-11-30", "pp": "2612", "type": "base", "adjFrom": null, "note": "" },
+    { "date": "2026-12-14", "pp": "2613", "type": "overage", "adjFrom": "2612", "note": "" },
+    { "date": "2026-12-28", "pp": "2613", "type": "base", "adjFrom": null, "note": "" }
+  ],
+  "bidMap": [
+    { "bid": 1, "app": "2601", "pps": ["2513", "2601"], "note": "" },
+    { "bid": 2, "app": "2602", "pps": ["2602", "2603"], "note": "" },
+    { "bid": 3, "app": "2603", "pps": ["2604", "2605"], "note": "" },
+    { "bid": 4, "app": "2604", "pps": ["2606", "2607"], "note": "" },
+    { "bid": 5, "app": "2605", "pps": ["2608", "2609"], "note": "" },
+    { "bid": 6, "app": "2606", "pps": ["2610", "2611"], "note": "" },
+    { "bid": 7, "app": "2607", "pps": ["2612"], "note": "short 4-week bid (November)" },
+    { "bid": 1, "app": "2701", "pps": ["2613", "2701"], "note": "next cycle" }
+  ]
+}
