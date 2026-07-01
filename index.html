@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay Tracker · Michael Saez</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; font-size: 14px; }
+
+  .header { background: linear-gradient(135deg, #0f2544 0%, #1e3a5f 100%); color: white; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-icon { font-size: 26px; }
+  .header h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+  .header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .hbtn { font-size: 11px; font-weight: 700; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); border-radius: 7px; padding: 7px 13px; cursor: pointer; transition: background 0.15s; }
+  .hbtn:hover { background: rgba(255,255,255,0.26); }
+
+  #payapp .databar { background:#e7eefb; color:#2350c0; font-size:11.5px; padding:6px 20px; border-bottom:1px solid #cdd; }
+  #payapp .databar.err { background:#fbe3e3; color:#b1232a; }
+  #payapp .tabs { display:flex; gap:4px; background:#1f3636; padding:0 12px; flex-wrap:wrap; }
+  #payapp .tabs button { background:transparent; border:0; color:#cfe0e0; padding:11px 16px; font-size:13px; cursor:pointer; border-bottom:3px solid transparent; }
+  #payapp .tabs button.active { color:#fff; border-bottom-color:#caa84a; font-weight:600; }
+  #payapp .pmain { padding:18px 20px 50px; max-width:980px; margin:0 auto; }
+  #payapp .ppanel { display:none; } #payapp .ppanel.active { display:block; }
+  #payapp h3.psec { font-size:15px; margin:4px 0 12px; }
+  #payapp table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.08); margin:0; }
+  #payapp th, #payapp td { text-align:left; padding:8px 10px; border-bottom:1px solid #eceef0; font-size:13px; }
+  #payapp th { background:#eef2f2; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:#4a5b5b; }
+  #payapp tr:last-child td { border-bottom:0; }
+  #payapp .pill { display:inline-block; padding:1px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+  #payapp .pill.approved{background:#e3f3e6;color:#1f7a34;} #payapp .pill.pending{background:#fdf2d6;color:#9a6b00;}
+  #payapp .pill.overage{background:#e7eefb;color:#2350c0;} #payapp .pill.base{background:#eef0f2;color:#566;}
+  #payapp .pill.special{background:#f3e7fb;color:#7a23c0;} #payapp .pill.match{background:#e3f3e6;color:#1f7a34;}
+  #payapp .pill.underpaid{background:#fbe3e3;color:#b1232a;} #payapp .pill.unusual{background:#fdf2d6;color:#9a6b00;}
+  #payapp .pill.unverified{background:#eef0f2;color:#566;} #payapp .pill.not-logged{background:#fbe3e3;color:#b1232a;}
+  #payapp .mono{font-variant-numeric:tabular-nums;}
+  #payapp .pcard{background:#fff;border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:14px;}
+  #payapp label{font-size:12px;color:#4a5b5b;display:block;margin:6px 0 2px;}
+  #payapp select,#payapp input{width:100%;padding:7px 9px;border:1px solid #d4d9dc;border-radius:6px;font-size:13px;background:#fff;}
+  #payapp .big{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;}
+  #payapp .muted{color:#7a8585;font-size:12px;}
+  #payapp .due-line{padding:8px 0;border-bottom:1px solid #eee;} #payapp .due-line:last-child{border-bottom:0;}
+  #payapp .note{background:#fff8e6;border:1px solid #f0e0a8;border-radius:8px;padding:10px 12px;font-size:12px;color:#6b5800;margin-bottom:14px;}
+  #payapp .alert{background:#fbe3e3;border:1px solid #e3a8a8;border-radius:8px;padding:10px 12px;font-size:12px;color:#8a1a20;margin-bottom:14px;}
+  #payapp .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){ #payapp .grid2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="header-icon">💵</div>
+    <div>
+      <h1>Pay Tracker</h1>
+      <p>Michael Saez · UPS Flight Ops</p>
+    </div>
+  </div>
+  <button class="hbtn" onclick="logout()">Sign out</button>
+</div>
+
+<div id="payapp">
+  <div class="databar" id="pay_databar">Loading pay data…</div>
+  <div class="tabs">
+    <button data-ptab="lookup" class="active">Check Lookup</button>
+    <button data-ptab="premiums">Premiums</button>
+    <button data-ptab="hours">Pay Hours</button>
+    <button data-ptab="paychecks">Paychecks</button>
+    <button data-ptab="calendar">Pay Calendar</button>
+  </div>
+  <div class="pmain">
+    <div id="pay_alertBanner"></div>
+    <section class="ppanel active" id="ppanel_lookup">
+      <h3 class="psec">What's on a given check?</h3>
+      <div class="pcard">
+        <label>Select a check date</label>
+        <select id="pay_checkSel"></select>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+          <span class="muted">Hourly rate $</span>
+          <input id="pay_rateInput" type="number" step="0.01" style="width:110px">
+          <span class="muted">/hr — dollar figures are estimates.</span>
+        </div>
+      </div>
+      <div id="pay_lookupOut"></div>
+    </section>
+    <section class="ppanel" id="ppanel_premiums">
+      <h3 class="psec">Premiums logged</h3>
+      <div class="note">A premium earned in a pay period is paid on the <b>base + overage check</b> that starts the next period. <b>LP1 pays 150%</b>, <b>LP2 pays 250%</b> — the Paid column and check totals use the multiplied value.</div>
+      <table id="pay_premTable"></table>
+    </section>
+    <section class="ppanel" id="ppanel_hours">
+      <h3 class="psec">Pay hours by pay period</h3>
+      <div class="note">Base pay is a contractual <b>75:00 per pay period</b> = <b>37:30 per check</b>; anything above 75:00 is <b>overage</b>, settling on the next period's base+overage check. A picked-up <b>JA</b> (junior assignment) adds its <b>nominal credit hours</b> to the Pay total but is paid at <b>150%</b> — the JA column shows those nominal hours, and the Check Lookup carves them out of overage and pays them at 1.5×.</div>
+      <table id="pay_hoursTable"></table>
+    </section>
+    <section class="ppanel" id="ppanel_paychecks">
+      <h3 class="psec">Paychecks — reconciled against deposit advices</h3>
+      <div class="note">Tracked lines: <b>base</b>, <b>overage</b>, <b>premiums</b>. <span class="pill match">match</span> paid correctly · <span class="pill underpaid">underpaid</span> came up short · <span class="pill unusual">unusual</span> differs.</div>
+      <div id="pay_paychecksOut"></div>
+    </section>
+    <section class="ppanel" id="ppanel_calendar">
+      <h3 class="psec">Bid period → pay period map</h3>
+      <table id="pay_bidTable"></table>
+      <h3 class="psec" style="margin-top:18px">2026 check calendar</h3>
+      <table id="pay_calTable"></table>
+    </section>
+  </div>
+</div>
+
+<script>
+async function logout() {
+  try { await fetch('/api/logout', { method: 'POST' }); } catch (e) {}
+  location.href = '/login.html';
+}
+
+const PayApp = (function(){
+  let DB=null, CHECKS=[], BIDMAP=[], PAYCHECKS=[];
+  const $=id=>document.getElementById(id);
+  const money=min=>"$"+(min/60*DB.rate).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fd=d=>new Date(d+"T00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  const ppl=pp=>pp?("PP "+pp.slice(2)+" (20"+pp.slice(0,2)+")"):"—";
+  const toMin=h=>{ if(!h) return 0; const [a,b]=h.split(":").map(Number); return a*60+(b||0); };
+  const fm=m=>{ const s=m<0?"-":""; m=Math.abs(m); return s+Math.floor(m/60)+":"+String(m%60).padStart(2,"0"); };
+  const tl=t=>t==="overage"?"base + overage":t==="base"?"base only":"special";
+  const mult=c=>{ c=(c||"").toUpperCase(); return c==="LP1"?1.5:c==="LP2"?2.5:1; };
+  const eff=p=>Math.round(toMin(p.hours)*mult(p.code));
+  const BASE_PERIOD_MIN=75*60, BASE_CHECK_MIN=37*60+30;
+  const JA_MULT=1.5;
+  const jaNomMin=pp=>(DB.ja||[]).filter(j=>j.pp===pp).reduce((s,j)=>s+toMin(j.hours),0);
+  const jaBonusMin=pp=>(DB.ja||[]).filter(j=>j.pp===pp).reduce((s,j)=>s+Math.round(toMin(j.hours)*((j.mult||JA_MULT)-1)),0);
+
+  function renderPrem(){
+    const rows=DB.premiums.slice().sort((a,b)=>(a.pp+a.date).localeCompare(b.pp+b.date));
+    let h="<tr><th>Pay Pd</th><th>Trip</th><th>Date</th><th>Code</th><th>Shown</th><th>Paid</th><th>Status</th><th>Reason / memo</th></tr>";
+    rows.forEach(r=>{ const m=mult(r.code); const paid=r.hours?fm(eff(r))+(m!==1?` (${m}×)`:""):"—";
+      const sc=r.status.toLowerCase().replace(/\s+/g,"-");
+      h+=`<tr><td>${ppl(r.pp)}</td><td>${r.trip}</td><td>${fd(r.date)}</td><td><b>${r.code}</b></td><td class="mono">${r.hours||"—"}</td><td class="mono">${paid}</td><td><span class="pill ${sc}">${r.status}</span></td><td>${r.memo||""}</td></tr>`; });
+    $('pay_premTable').innerHTML=h;
+  }
+  function renderHours(){
+    const rows=DB.hours.slice().sort((a,b)=>a.pp.localeCompare(b.pp));
+    const anyJa=(DB.ja||[]).length>0;
+    let h="<tr><th>Pay Pd</th><th>Bid Pd</th><th>Scheduled</th><th>Line</th><th>Pay</th>"+(anyJa?"<th>JA (150%)</th>":"")+"</tr>";
+    rows.forEach(r=>{ const jn=jaNomMin(r.pp);
+      h+=`<tr><td>${ppl(r.pp)}</td><td>${r.bid}</td><td class="mono">${r.sched||"—"}</td><td class="mono">${r.line||"—"}</td><td class="mono"><b>${r.pay||"—"}</b></td>`+(anyJa?`<td class="mono">${jn?(fm(jn)+` <span class="pill special">×1.5</span>`):"—"}</td>`:"")+`</tr>`; });
+    $('pay_hoursTable').innerHTML=h;
+  }
+  function renderPaychecks(){
+    const out=$('pay_paychecksOut');
+    if(!PAYCHECKS.length){ out.innerHTML='<div class="muted">No paychecks reconciled yet.</div>'; return; }
+    const rows=PAYCHECKS.slice().sort((a,b)=>b.date.localeCompare(a.date));
+    const cell=o=>{ if(!o) return "—"; const ok=toMin(o.actual)===toMin(o.expected); return `<span class="mono">${o.actual||"—"}</span>${ok?"":` <span class="muted">(exp ${o.expected})</span>`}`; };
+    let h="<tr><th>Pay Date</th><th>Verdict</th><th>Base</th><th>Overage</th><th>Premiums</th><th>Net</th><th>Note</th></tr>";
+    rows.forEach(p=>{ const st=(p.status||"unverified").toLowerCase();
+      h+=`<tr><td>${fd(p.date)}</td><td><span class="pill ${st}">${p.status||"unverified"}</span></td><td>${cell(p.base)}</td><td>${cell(p.overage)}</td><td>${cell(p.premium)}</td><td class="mono">${p.net?("$"+Number(p.net).toLocaleString("en-US",{minimumFractionDigits:2})):"—"}</td><td class="muted">${p.note||""}</td></tr>`; });
+    out.innerHTML=`<table>${h}</table>`;
+    const bad=PAYCHECKS.filter(p=>(p.status||"").toLowerCase()==="underpaid");
+    if(bad.length) out.insertAdjacentHTML("afterbegin",`<div class="alert"><b>⚠ ${bad.length} check(s) flagged underpaid:</b> ${bad.map(b=>fd(b.date)).join(", ")}.</div>`);
+  }
+  function renderBid(){
+    let h="<tr><th>Bid Pd #</th><th>App name</th><th>Pay periods</th><th>Note</th></tr>";
+    BIDMAP.forEach(b=>{ h+=`<tr><td>${b.bid}</td><td class="mono">BP ${b.app}</td><td>${b.pps.map(p=>"PP "+p.slice(2)).join(" + ")}</td><td class="muted">${b.note||""}</td></tr>`; });
+    $('pay_bidTable').innerHTML=h;
+  }
+  function renderCal(){
+    let h="<tr><th>Check Date</th><th>Type</th><th>Base Pay Pd</th><th>Premiums From</th><th>Note</th></tr>";
+    CHECKS.forEach(c=>{ h+=`<tr><td>${fd(c.date)}</td><td><span class="pill ${c.type}">${tl(c.type)}</span></td><td>${ppl(c.pp)}</td><td>${c.adjFrom?ppl(c.adjFrom):"—"}</td><td class="muted">${c.note||""}</td></tr>`; });
+    $('pay_calTable').innerHTML=h;
+  }
+  function renderCheckSel(){
+    const sel=$('pay_checkSel'); const today=new Date().toISOString().slice(0,10);
+    let def=CHECKS.find(c=>c.date>=today)||CHECKS[CHECKS.length-1];
+    sel.innerHTML=CHECKS.map(c=>{ let d; if(c.type==="special")d=c.note||"special"; else if(c.type==="overage")d=`base ${c.pp.slice(2)} + overage ${c.adjFrom.slice(2)}`; else d=`base ${c.pp.slice(2)} only`;
+      return `<option value="${c.date}" ${c===def?"selected":""}>${fd(c.date)} — ${d}</option>`; }).join("");
+    sel.onchange=renderLookup; renderLookup();
+  }
+  function renderLookup(){
+    const date=$('pay_checkSel').value; const c=CHECKS.find(x=>x.date===date); const out=$('pay_lookupOut');
+    if(!c){ out.innerHTML=""; return; }
+    if(c.type==="special"){ out.innerHTML=`<div class="pcard"><b>${c.note}</b><div class="muted">Special check — base/overage not tracked here.</div></div>`; return; }
+    const isOver=c.type==="overage", adjPP=isOver?c.adjFrom:null;
+    const adjHrs=adjPP?DB.hours.find(x=>x.pp===adjPP):null;
+    const overMin=(adjHrs&&adjHrs.pay)?Math.max(0,toMin(adjHrs.pay)-BASE_PERIOD_MIN):0;
+    const jaList=isOver?(DB.ja||[]).filter(j=>j.pp===adjPP):[];
+    const jaNom=isOver?jaNomMin(adjPP):0;
+    const jaBonus=isOver?jaBonusMin(adjPP):0;
+    const overNonJa=Math.max(0,overMin-jaNom);
+    const jaPaid=jaNom+jaBonus;
+    const due=adjPP?DB.premiums.filter(p=>p.pp===adjPP):[];
+    const apprMin=due.filter(p=>p.status==="Approved").reduce((s,p)=>s+eff(p),0);
+    const pendMin=due.filter(p=>p.status!=="Approved").reduce((s,p)=>s+eff(p),0);
+    const totalMin=BASE_CHECK_MIN+overMin+jaBonus+apprMin;
+    const pc=PAYCHECKS.find(p=>p.date===date); let banner="";
+    if(pc){ const st=(pc.status||"unverified").toLowerCase(); banner=`<div class="${st==="underpaid"?"alert":"note"}" style="margin-bottom:14px">Reconciled against deposit advice — <span class="pill ${st}">${pc.status}</span>. ${pc.note||""}</div>`; }
+    const totalLbl="base + overage"+(jaNom?" + JA":"")+" + premiums";
+    let h=banner+`<div class="pcard" style="border-left:4px solid #caa84a"><div class="muted">Total estimated paid this check — ${totalLbl}</div><div class="big">${fm(totalMin)}</div><div class="muted">${fm(totalMin)} × $${DB.rate}/hr ≈ <b>${money(totalMin)}</b>${pendMin?(" · +"+fm(pendMin)+" ("+money(pendMin)+") if pending approves"):""}</div></div>`;
+    const ovBig=isOver?fm(jaNom?overNonJa:overMin):"—";
+    const ovSub=isOver?(adjHrs?("credited "+adjHrs.pay+" − 75:00 base"+(jaNom?(" − "+fm(jaNom)+" JA"):"")+" · ≈ "+money(jaNom?overNonJa:overMin)):"no pay-hour data for "+ppl(adjPP)):"base-only check";
+    h+=`<div class="grid2"><div class="pcard"><div class="muted">Base pay</div><div class="big">37:30</div><div class="muted">half of the 75:00 base for ${ppl(c.pp)} · ≈ ${money(BASE_CHECK_MIN)}</div></div><div class="pcard"><div class="muted">Overage ${adjPP?("(from "+ppl(adjPP)+")"):""}</div><div class="big">${ovBig}</div><div class="muted">${ovSub}</div></div></div>`;
+    if(jaNom){
+      h+=`<div class="pcard" style="border-left:4px solid #7a23c0"><div class="muted">JA — junior-assignment trips (from ${ppl(adjPP)}, paid 150%)</div><div class="big">${fm(jaPaid)}</div><div class="muted" style="margin-bottom:6px">${fm(jaNom)} nominal credit × 1.5 = <b>${fm(jaPaid)}</b> · ≈ ${money(jaPaid)}</div>`;
+      jaList.forEach(j=>{ const nm=toMin(j.hours), m=(j.mult||JA_MULT); h+=`<div class="due-line"><b>JA ${j.trip}</b> · ${fm(nm)} × ${m} = ${fm(Math.round(nm*m))} paid <span class="pill special">JA</span><div class="muted">${fd(j.date)} — ${j.memo||""}</div></div>`; });
+      h+=`</div>`;
+    }
+    if(isOver){
+      h+=`<div class="pcard"><div class="muted">Premiums on this check ${adjPP?("(from "+ppl(adjPP)+")"):""}</div><div class="big">${fm(apprMin)}</div><div class="muted" style="margin-bottom:6px">${fm(apprMin)} approved${pendMin?(", "+fm(pendMin)+" pending"):""} · ≈ ${money(apprMin)}</div>`;
+      if(due.length){ due.forEach(p=>{ const m=mult(p.code); const paid=p.hours?(fm(eff(p))+(m!==1?` paid (${p.hours} × ${m})`:" paid")):"—";
+        h+=`<div class="due-line"><b>${p.code}</b> · ${paid} · ${p.trip} <span class="pill ${p.status.toLowerCase()}">${p.status}</span><div class="muted">${fd(p.date)} — ${p.memo||""}</div></div>`; }); }
+      else h+=`<div class="muted">No premiums logged for ${ppl(adjPP)}.</div>`;
+      h+=`</div>`;
+    }
+    out.innerHTML=h;
+  }
+  function renderAlerts(){
+    const today=new Date(); today.setHours(0,0,0,0); const alerts=[];
+    const endedPPs=CHECKS.filter(c=>c.type==="base"&&c.pp&&new Date(c.date+"T00:00")<today).map(c=>c.pp);
+    endedPPs.forEach(pp=>{ const pending=DB.premiums.filter(p=>p.pp===pp&&p.status!=="Approved"); if(!pending.length) return;
+      const check=CHECKS.find(c=>c.type==="overage"&&c.adjFrom===pp); if(!check) return;
+      alerts.push({pp,pending,check,daysUntil:Math.round((new Date(check.date+"T00:00")-today)/864e5)}); });
+    const el=$('pay_alertBanner'); if(!alerts.length){ el.innerHTML=""; return; }
+    alerts.sort((a,b)=>a.daysUntil-b.daysUntil);
+    el.innerHTML=alerts.map(({pp,pending,check,daysUntil})=>{ const past=daysUntil<0,urgent=daysUntil<=7; const cls=past||urgent?"alert":"note"; const icon=past?"🚨":urgent?"⚠️":"⏰";
+      const when=past?`check was ${Math.abs(daysUntil)}d ago — may be too late`:daysUntil===0?"check is TODAY":`${daysUntil}d until ${fd(check.date)} check`;
+      const items=pending.map(p=>{ const m=mult(p.code); const v=p.hours?` — ${fm(eff(p))} paid (${p.hours}×${m})`:" — hours TBD"; return `<b>${p.code}</b> ${p.trip}${v}`; }).join(", ");
+      return `<div class="${cls}" style="margin-bottom:8px">${icon} <b>PP ${pp.slice(2)}: ${pending.length} premium${pending.length>1?"s":""} still pending</b> · ${when}<br><span style="font-size:12px">${items} · verify at flightops.inside.ups.com → Premium Pay → PP ${pp.slice(2)}</span></div>`; }).join("");
+  }
+  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBid(); renderCal(); renderCheckSel(); }
+  function wireTabs(){ document.querySelectorAll('#payapp .tabs button').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('ppanel_'+b.dataset.ptab).classList.add('active'); }; }); }
+
+  async function init(){
+    wireTabs();
+    const bar=$('pay_databar');
+    try{
+      const res = await fetch('/api/pay-data', { credentials: 'same-origin' });
+      if (res.status === 401) {
+        location.href = '/login.html?next=' + encodeURIComponent(location.pathname);
+        return;
+      }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const DATA = await res.json();
+      CHECKS=DATA.checks||[]; BIDMAP=DATA.bidMap||[]; PAYCHECKS=DATA.paychecks||[];
+      DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17};
+      const ri=$('pay_rateInput'); ri.value=DB.rate; ri.onchange=()=>{ const v=parseFloat(ri.value); if(v>0){ DB.rate=v; renderLookup(); } };
+      renderAllPay();
+      const lu = DATA.lastUpdated ? new Date(DATA.lastUpdated).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) : 'unknown';
+      bar.className='databar'; bar.textContent='🔒 Synced from GitHub · last updated ' + lu;
+    }catch(e){ bar.className='databar err'; bar.textContent='⚠️ Could not load pay data: '+e.message; }
+  }
+  return { init };
+})();
+
+window.addEventListener('DOMContentLoaded', PayApp.init);
+</script>
+</body>
+</html>
