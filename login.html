@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay Tracker · Sign in</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #0f2544 0%, #1e3a5f 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .icon { font-size: 32px; margin-bottom: 8px; }
+  h1 { font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
+  p.sub { font-size: 13px; color: #64748b; margin-bottom: 20px; }
+  label { font-size: 12px; font-weight: 700; color: #4a5b5b; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .4px; }
+  input[type="password"] {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+  input[type="password"]:focus { outline: none; border-color: #caa84a; }
+  button {
+    width: 100%;
+    padding: 11px;
+    background: #1e3a5f;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  button:hover { background: #0f2544; }
+  button:disabled { opacity: .6; cursor: default; }
+  .err {
+    background: #fbe3e3;
+    color: #b1232a;
+    border: 1px solid #e3a8a8;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    margin-bottom: 14px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">💵</div>
+    <h1>Pay Tracker</h1>
+    <p class="sub">Michael Saez — enter the password to continue</p>
+    <div class="err" id="err"></div>
+    <form id="loginForm">
+      <label for="pw">Password</label>
+      <input type="password" id="pw" name="password" autocomplete="current-password" autofocus required>
+      <button type="submit" id="submitBtn">Sign in</button>
+    </form>
+  </div>
+  <script>
+    const form = document.getElementById('loginForm');
+    const err = document.getElementById('err');
+    const btn = document.getElementById('submitBtn');
+    const params = new URLSearchParams(location.search);
+    const next = params.get('next') || '/';
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      err.style.display = 'none';
+      btn.disabled = true; btn.textContent = 'Signing in…';
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: document.getElementById('pw').value })
+        });
+        if (res.ok) {
+          location.href = next;
+        } else {
+          const data = await res.json().catch(() => ({}));
+          err.textContent = data.error || 'Incorrect password';
+          err.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Sign in';
+        }
+      } catch (e2) {
+        err.textContent = 'Network error — try again';
+        err.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Sign in';
+      }
+    });
+  </script>
+</body>
+</html>
