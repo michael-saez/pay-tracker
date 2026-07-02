@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pay Tracker · Michael Saez</title>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="alternate icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
   :root { color-scheme: light; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -113,9 +110,13 @@
 </div>
 
 <script>
+// Works whether hosted at the deployment root (pay-tracker-flame.vercel.app)
+// or reverse-proxied under michaelsaez.com/pay-tracker.
+const APP_BASE = location.pathname.includes('/pay-tracker') ? '/pay-tracker' : '';
+
 async function logout() {
-  try { await fetch('/api/logout', { method: 'POST' }); } catch (e) {}
-  location.href = '/login.html';
+  try { await fetch(APP_BASE + '/api/logout', { method: 'POST' }); } catch (e) {}
+  location.href = APP_BASE + '/login.html';
 }
 
 const PayApp = (function(){
@@ -236,9 +237,9 @@ const PayApp = (function(){
     wireTabs();
     const bar=$('pay_databar');
     try{
-      const res = await fetch('/api/pay-data', { credentials: 'same-origin' });
+      const res = await fetch(APP_BASE + '/api/pay-data', { credentials: 'same-origin' });
       if (res.status === 401) {
-        location.href = '/login.html?next=' + encodeURIComponent(location.pathname);
+        location.href = APP_BASE + '/login.html?next=' + encodeURIComponent(location.pathname);
         return;
       }
       if (!res.ok) throw new Error('HTTP ' + res.status);
