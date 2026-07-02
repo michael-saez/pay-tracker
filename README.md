@@ -4,6 +4,13 @@ Michael Saez's UPS pay tracker — a static dashboard backed by a small Vercel
 serverless API, gated by a single shared password (persistent cookie, not a
 per-visit prompt).
 
+**Live at:** https://michaelsaez.com/pay-tracker (primary) — also reachable
+directly at the Vercel deployment URL, e.g. https://pay-tracker-flame.vercel.app.
+The `/pay-tracker` path works via a reverse-proxy rewrite configured in the
+**michael-saez/pilot-schedule** repo's `vercel.json` (that repo owns the
+michaelsaez.com domain). `index.html` and `login.html` detect which context
+they're running in via the `APP_BASE` constant so both URLs work identically.
+
 ## Structure
 
 ```
