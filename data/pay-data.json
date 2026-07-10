@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-02T00:14:44Z",
+  "lastUpdated": "2026-07-10T00:39:30Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -80,9 +80,9 @@
       "trip": "53064",
       "date": "2026-06-27",
       "code": "AP2",
-      "hours": "",
-      "status": "Pending",
-      "memo": "EXT SDF L/O > 12 HRS \u2014 submitted 6/24/2026, awaiting verification"
+      "hours": "02:00",
+      "status": "Approved",
+      "memo": "EXT SDF L/O > 12 HRS \u2014 approved, verified #5141030 on 7/1/2026"
     }
   ],
   "hours": [
