@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-10T00:39:30Z",
+  "lastUpdated": "2026-07-30T01:30:41Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -83,6 +83,15 @@
       "hours": "02:00",
       "status": "Approved",
       "memo": "EXT SDF L/O > 12 HRS \u2014 approved, verified #5141030 on 7/1/2026"
+    },
+    {
+      "pp": "2608",
+      "trip": "A70518",
+      "date": "2026-07-28",
+      "code": "AP2",
+      "hours": "",
+      "status": "Pending",
+      "memo": "L/O ICN ISO HKG"
     }
   ],
   "hours": [
