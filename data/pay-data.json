@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:15:56Z",
+  "lastUpdated": "2026-08-04T04:16:12Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -97,7 +97,7 @@
   "hours": [
     {
       "pp": "2603",
-      "bid": "",
+      "bid": "2602",
       "sched": "",
       "line": "76:04",
       "pay": "76:04",
