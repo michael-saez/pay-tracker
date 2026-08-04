@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:10:14Z",
+  "lastUpdated": "2026-08-04T04:15:56Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -96,12 +96,25 @@
   ],
   "hours": [
     {
+      "pp": "2603",
+      "bid": "",
+      "sched": "",
+      "line": "76:04",
+      "pay": "76:04",
+      "registerVerified": "76:04",
+      "note": "Predates the tracker \u2014 Actual Credit only, from the PP2605 register's history column. No register on file."
+    },
+    {
       "pp": "2604",
       "bid": "2603",
       "sched": "77:46",
       "line": "99:01",
       "pay": "99:01",
-      "registerVerified": "99:01"
+      "registerVerified": "99:01",
+      "beginLine": "77:46",
+      "beginPay": "77:46",
+      "endLine": "99:01",
+      "endPay": "99:01"
     },
     {
       "pp": "2605",
@@ -110,7 +123,18 @@
       "line": "110:36",
       "pay": "110:36",
       "registerVerified": "110:36",
-      "ptt": "16:57"
+      "ptt": "16:57",
+      "beginLine": "79:44",
+      "beginPay": "79:44",
+      "endLine": "110:36",
+      "endPay": "110:36",
+      "dutyDays": 14,
+      "creditCap": "110:36",
+      "blockPaid": "69:38",
+      "intlPremium": "107:35",
+      "blockToBlock": "0:32",
+      "registerPeriod": "2026-04-19 to 2026-05-17",
+      "note": "Register: 14 duty days, cap 110:36, block paid 69:38, intl premium 107:35, PTT 16:57, block-to-block 0:32. No sick used."
     },
     {
       "pp": "2606",
@@ -522,6 +546,14 @@
   },
   "sick": [
     {
+      "pp": "2605",
+      "periodEnd": "2026-05-17",
+      "used": "",
+      "accrued": "5:30",
+      "balance": "220:31",
+      "memo": "Register PP 04/19-05/17. No sick used."
+    },
+    {
       "pp": "2606",
       "periodEnd": "2026-06-14",
       "used": "13:47",
@@ -539,6 +571,13 @@
     }
   ],
   "vacation": [
+    {
+      "pp": "2605",
+      "periodEnd": "2026-05-17",
+      "banked": "33:00",
+      "bankedUsed": "",
+      "memo": "Register PP 04/19-05/17."
+    },
     {
       "pp": "2606",
       "periodEnd": "2026-06-14",
