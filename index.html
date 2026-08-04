@@ -253,29 +253,35 @@ const PayApp = (function(){
   function renderSickEvents(){
     const P=DB.sickPolicy||{}, EV=(DB.sickEvents||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
     const win=P.windowDays||365, thr=P.threshold||7, warn=P.warnAt||Math.max(1,thr-2);
-    const today=new Date(); const cut=new Date(today.getTime()-win*86400000);
-    const inWin=EV.filter(e=>new Date(e.date+"T00:00")>=cut);
-    const n=inWin.length;
+    const cut=new Date(Date.now()-win*86400000);
+    const inWin=e=>new Date(e.date+"T00:00")>=cut;
+    const cnt=e=>(e.counts||"yes").toLowerCase();
+    const counted=EV.filter(e=>inWin(e)&&cnt(e)==="yes");
+    const unk=EV.filter(e=>inWin(e)&&cnt(e)==="unknown");
+    const n=counted.length, u=unk.length, worst=n+u;
     const state=n>=thr?"underpaid":n>=warn?"unusual":"approved";
     const label=n>=thr?"AT / OVER THRESHOLD":n>=warn?"approaching":"clear";
-    // when does the oldest in-window call roll off (i.e. count drops)
-    const oldest=inWin.length?inWin[inWin.length-1]:null;
+    const oldest=counted.length?counted[counted.length-1]:null;
     let rollOff="";
     if(oldest){ const ro=new Date(new Date(oldest.date+"T00:00").getTime()+win*86400000);
-      rollOff='Oldest call ('+fd(oldest.date)+') rolls out of the window on <b>'+ro.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+'</b>.'; }
+      rollOff='Oldest counting call ('+fd(oldest.date)+') rolls out of the window on <b>'+ro.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+'</b>.'; }
     let out='<div class="pcard"><div class="muted">Sick calls in the trailing '+win+' days</div>'
       +'<div class="big">'+n+' <span style="font-size:15px;font-weight:500;color:#7a8585">of '+thr+'</span></div>'
       +'<div style="margin:8px 0"><span class="pill '+state+'">'+label+'</span> <span class="muted">'+Math.max(0,thr-n)+' remaining before the '+thr+'-call trigger</span></div>'
+      +(u?'<div class="due-line"><span class="pill unusual">'+u+' unconfirmed</span> <span class="muted">not counted — worst case would be '+worst+' of '+thr+'</span></div>':"")
       +(rollOff?'<div class="due-line muted">'+rollOff+'</div>':"")
       +(P.note?'<div class="due-line muted" style="font-style:italic">'+P.note+'</div>':"")
       +'</div>';
     if(n>=thr) out='<div class="alert"><b>\u26a0 '+n+' sick calls in the last '+win+' days</b> — at or past the '+thr+'-call threshold. Expect a call / formal attendance tracking.</div>'+out;
     else if(n>=warn) out='<div class="note"><b>'+n+' sick calls in the last '+win+' days.</b> '+(thr-n)+' more would hit the '+thr+'-call threshold.</div>'+out;
+    else if(worst>=warn) out='<div class="note"><b>'+u+' unconfirmed event(s).</b> If they count, you would be at '+worst+' of '+thr+'. Worth verifying with crew scheduling.</div>'+out;
 
-    let h="<tr><th>Date</th><th>Pay Pd</th><th>Hours</th><th>Trip</th><th>In window</th><th>Note</th></tr>";
-    EV.forEach(e=>{ const ok=new Date(e.date+"T00:00")>=cut;
-      h+='<tr><td>'+fd(e.date)+'</td><td>'+(e.pp?ppl(e.pp):"—")+'</td><td class="mono">'+(e.hours||"—")+'</td><td class="mono">'+(e.trip||"—")+'</td><td>'+(ok?'<span class="pill approved">counts</span>':'<span class="pill unverified">rolled off</span>')+'</td><td class="muted">'+(e.note||"")+'</td></tr>'; });
+    const badge=e=>{ const c=cnt(e); if(!inWin(e)) return '<span class="pill unverified">rolled off</span>';
+      return c==="yes"?'<span class="pill approved">counts</span>':c==="no"?'<span class="pill base">excluded</span>':'<span class="pill unusual">unconfirmed</span>'; };
+    let h="<tr><th>Date</th><th>Pay Pd</th><th>Hours</th><th>Trip</th><th>Status</th><th>Note</th></tr>";
+    EV.forEach(e=>{ h+='<tr><td>'+fd(e.date)+'</td><td>'+(e.pp?ppl(e.pp):"—")+'</td><td class="mono">'+(e.hours||"—")+'</td><td class="mono">'+(e.trip||"—")+'</td><td>'+badge(e)+'</td><td class="muted">'+(e.note||"")+'</td></tr>'; });
     out += EV.length?('<table>'+h+'</table>'):'<div class="muted">No sick calls logged yet.</div>';
+    out += '<div class="muted" style="margin-top:8px">'+(P.countsNote||"")+'</div>';
     $('pay_sickEvents').innerHTML=out;
   }
   function renderBalances(){
