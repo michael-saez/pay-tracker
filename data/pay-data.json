@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:43:56Z",
+  "lastUpdated": "2026-08-04T04:52:20Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -439,6 +439,24 @@
         "expected": "18:18"
       },
       "note": "Reconciled from deposit advice 6.29.pdf \u2014 all tracked lines match."
+    },
+    {
+      "date": "2026-07-13",
+      "net": "6567.62",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "Deposit advice #298160548 (PP 6/28-7/11/26, rate $247.17) \u2014 base-only check, matches. New line FLIGHT OPS/M $106.88 (post-tax deduction) appeared for the first time this period."
     },
     {
       "date": "2026-07-27",
