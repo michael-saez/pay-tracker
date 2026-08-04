@@ -77,11 +77,13 @@
     <button data-ptab="hours">Pay Hours</button>
     <button data-ptab="paychecks">Paychecks</button>
     <button data-ptab="balances">Balances</button>
+    <button data-ptab="coverage">Missing Docs</button>
     <button data-ptab="calendar">Pay Calendar</button>
   </div>
   <div class="pmain">
     <div id="pay_alertBanner"></div>
     <section class="ppanel active" id="ppanel_lookup">
+      <div id="pay_coverage"></div>
       <h3 class="psec">What's on a given check?</h3>
       <div class="pcard">
         <label>Select a check date</label>
@@ -119,6 +121,11 @@
       <table id="pay_sickTable"></table>
       <h3 class="psec" style="margin-top:18px">Vacation history</h3>
       <table id="pay_vacTable"></table>
+    </section>
+    <section class="ppanel" id="ppanel_coverage">
+      <h3 class="psec">Document coverage</h3>
+      <div class="note">Two source documents feed this tracker. A <b>deposit advice / earnings statement</b> (Dayforce) verifies each check. A <b>flight payroll register</b> (Flight Ops) supplies pay hours, sick &amp; vacation balances, and per-period detail. Anything listed below is a gap.</div>
+      <div id="pay_coverageFull"></div>
     </section>
     <section class="ppanel" id="ppanel_calendar">
       <h3 class="psec">Bid period → pay period map</h3>
@@ -314,7 +321,55 @@ const PayApp = (function(){
     V.forEach(r=>{ v+='<tr><td>'+ppl(r.pp)+'</td><td>'+(r.periodEnd?fd(r.periodEnd):"—")+'</td><td class="mono">'+(r.bankedUsed||"—")+'</td><td class="mono"><b>'+(r.banked||"—")+'</b></td><td class="muted">'+(r.memo||"")+'</td></tr>'; });
     $('pay_vacTable').innerHTML=V.length?v:"<tr><td class='muted'>No vacation data yet.</td></tr>";
   }
-  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBalances(); renderSickEvents(); renderBid(); renderCal(); renderCheckSel(); }
+  function coverageData(){
+    const today=new Date(); const iso=d=>d.toISOString().slice(0,10); const T=iso(today);
+    const havePc=new Set(PAYCHECKS.map(p=>p.date));
+    const pastChecks=CHECKS.filter(c=>c.date<=T);
+    const missChecks=pastChecks.filter(c=>!havePc.has(c.date)).sort((a,b)=>b.date.localeCompare(a.date));
+    const nextCheck=CHECKS.filter(c=>c.date>T).sort((a,b)=>a.date.localeCompare(b.date))[0]||null;
+
+    // a pay period is "closed" once a check that settles it has been issued
+    const settled=new Set(CHECKS.filter(c=>c.date<=T&&c.adjFrom).map(c=>c.adjFrom));
+    const hoursBy={}; DB.hours.forEach(h=>hoursBy[h.pp]=h);
+    const allPps=[...new Set(CHECKS.map(c=>c.pp).filter(Boolean))].sort();
+    const closed=allPps.filter(p=>settled.has(p));
+    const missRegs=closed.filter(p=>!(hoursBy[p]&&hoursBy[p].registerPeriod))
+      .map(p=>({pp:p, partial:!!hoursBy[p]})).sort((a,b)=>b.pp.localeCompare(a.pp));
+    const openPp=allPps.filter(p=>!settled.has(p))[0]||null;
+    return {missChecks,missRegs,nextCheck,openPp,T};
+  }
+  function renderCoverage(){
+    const C=coverageData(); const n=C.missChecks.length+C.missRegs.length;
+    const brief = n===0
+      ? '<div class="pcard"><b>\u2705 Nothing missing.</b> <span class="muted">Every issued check has a deposit advice and every closed pay period has a register.</span></div>'
+      : '<div class="note"><b>\u{1F4C4} '+n+' document'+(n===1?'':'s')+' missing.</b> '
+        +(C.missChecks.length?C.missChecks.length+' earnings statement'+(C.missChecks.length===1?'':'s'):'')
+        +(C.missChecks.length&&C.missRegs.length?' · ':'')
+        +(C.missRegs.length?C.missRegs.length+' flight register'+(C.missRegs.length===1?'':'s'):'')
+        +' — most recent: '+(C.missChecks[0]?fd(C.missChecks[0].date):ppl(C.missRegs[0].pp))
+        +'. <a href="#" onclick="PayApp.goCoverage();return false;"><b>See the list \u2192</b></a></div>';
+    $('pay_coverage').innerHTML=brief;
+
+    let out='';
+    if(C.nextCheck) out+='<div class="pcard"><div class="muted">Next check</div><div class="big">'+fd(C.nextCheck.date)+'</div><div class="muted">'+tl(C.nextCheck.type)+(C.nextCheck.adjFrom?' · settles '+ppl(C.nextCheck.adjFrom):'')+' — pull the Dayforce earnings statement after it posts.</div>'
+      +(C.openPp?'<div class="due-line muted" style="margin-top:8px">'+ppl(C.openPp)+' is still open; its register becomes available once the period closes.</div>':'')+'</div>';
+
+    out+='<h3 class="psec" style="margin-top:18px">Earnings statements (deposit advices) not yet reconciled</h3>';
+    if(!C.missChecks.length) out+='<div class="pcard"><b>\u2705 All issued checks reconciled.</b></div>';
+    else { let h='<tr><th>Check Date</th><th>Type</th><th>Settles</th><th>Note</th></tr>';
+      C.missChecks.forEach(c=>{ h+='<tr><td>'+fd(c.date)+'</td><td><span class="pill '+c.type+'">'+tl(c.type)+'</span></td><td>'+(c.adjFrom?ppl(c.adjFrom):"—")+'</td><td class="muted">'+(c.note||"")+'</td></tr>'; });
+      out+='<table>'+h+'</table>'; }
+
+    out+='<h3 class="psec" style="margin-top:18px">Flight payroll registers missing</h3>';
+    if(!C.missRegs.length) out+='<div class="pcard"><b>\u2705 Every closed pay period has a register.</b></div>';
+    else { let h='<tr><th>Pay Period</th><th>Status</th><th>What\u2019s there now</th></tr>';
+      C.missRegs.forEach(r=>{ const hh=DB.hours.find(x=>x.pp===r.pp);
+        h+='<tr><td>'+ppl(r.pp)+'</td><td>'+(r.partial?'<span class="pill unusual">partial</span>':'<span class="pill not-logged">no data</span>')+'</td><td class="muted">'+(hh?('pay hours '+(hh.pay||"—")+(hh.note?' — '+hh.note:'')):'nothing on file')+'</td></tr>'; });
+      out+='<table>'+h+'</table>'; }
+    $('pay_coverageFull').innerHTML=out;
+  }
+  function goCoverage(){ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); document.querySelector('#payapp .tabs button[data-ptab="coverage"]').classList.add('active'); $('ppanel_coverage').classList.add('active'); }
+  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBalances(); renderSickEvents(); renderCoverage(); renderBid(); renderCal(); renderCheckSel(); }
   function wireTabs(){ document.querySelectorAll('#payapp .tabs button').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('ppanel_'+b.dataset.ptab).classList.add('active'); }; }); }
 
   async function init(){
@@ -336,7 +391,7 @@ const PayApp = (function(){
       bar.className='databar'; bar.textContent='🔒 Synced from GitHub · last updated ' + lu;
     }catch(e){ bar.className='databar err'; bar.textContent='⚠️ Could not load pay data: '+e.message; }
   }
-  return { init };
+  return { init, goCoverage };
 })();
 
 window.addEventListener('DOMContentLoaded', PayApp.init);
