@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-30T04:12:02Z",
+  "lastUpdated": "2026-08-04T03:35:09Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -107,14 +107,16 @@
       "bid": "2603",
       "sched": "79:44",
       "line": "110:36",
-      "pay": "110:36"
+      "pay": "110:36",
+      "registerVerified": "110:36"
     },
     {
       "pp": "2606",
       "bid": "2604",
       "sched": "80:34",
       "line": "94:36",
-      "pay": "94:36"
+      "pay": "94:36",
+      "registerVerified": "94:36"
     },
     {
       "pp": "2607",
@@ -122,7 +124,20 @@
       "sched": "76:58",
       "line": "126:59",
       "pay": "126:59",
-      "note": "Includes picked-up JA trip 53064 (44:21 nominal, pays 150%)"
+      "note": "Includes picked-up JA trip 53064 (44:21 nominal, pays 150%). Register: 13 duty days, cap 87:31, block paid 47:59, intl premium 77:43, 4:00 training on a day off, 4:00 sick (7/11), 18:00 banked vacation used.",
+      "beginLine": "76:58",
+      "beginPay": "76:58",
+      "endLine": "126:59",
+      "endPay": "126:59",
+      "dutyDays": 13,
+      "creditCap": "87:31",
+      "blockPaid": "47:59",
+      "intlPremium": "77:43",
+      "trainingDayOff": "4:00",
+      "jaAboveGuarantee": "44:21",
+      "sickUsed": "4:00",
+      "vacBankedUsed": "18:00",
+      "registerPeriod": "2026-06-14 to 2026-07-12"
     }
   ],
   "ja": [
@@ -189,6 +204,28 @@
         "expected": "18:18"
       },
       "note": "Reconciled from deposit advice 6.29.pdf \u2014 all tracked lines match."
+    },
+    {
+      "date": "2026-07-27",
+      "net": "24363.18",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "07:38",
+        "expected": "07:38"
+      },
+      "premium": {
+        "actual": "21:23",
+        "expected": "21:23"
+      },
+      "ja": {
+        "actual": "44:21",
+        "expected": "44:21"
+      },
+      "note": "Deposit advice #306991697 (PP 7/12-7/25). All tracked lines match PP2607 register: overage = 126:59 - 75:00 - 44:21 JA = 7:38; premium 21:23 = AP2 2:00 + AP2 2:00 + LP1 10:15x1.5 + AP2 2:00; JUNIOR 150% 44:21 @ $370.76. Untracked extras: TRAINING DAYOFF 4:00 $988.68, VAC ON DAY OFF 6:00 $1,453.92, VACATION 45:00 $10,904.40, INTL PREMIUM 77.72 $349.74."
     }
   ],
   "checks": [
@@ -454,5 +491,20 @@
       ],
       "note": "next cycle"
     }
-  ]
+  ],
+  "balances": {
+    "asOf": "2026-07-12",
+    "source": "UPS Flight Payroll Register PP 06/14/26-07/12/26",
+    "sickBalance": "213:44",
+    "sickAccruedPeriod": "5:30",
+    "sickUsedPeriod": "4:00",
+    "vacationBanked": "15:00",
+    "vacationBankedUsed": "18:00",
+    "perDiem": {
+      "DM": "74:32",
+      "IN": "25:10",
+      "EU": "69:52",
+      "PR": "156:08"
+    }
+  }
 }
