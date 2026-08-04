@@ -76,6 +76,7 @@
     <button data-ptab="premiums">Premiums</button>
     <button data-ptab="hours">Pay Hours</button>
     <button data-ptab="paychecks">Paychecks</button>
+    <button data-ptab="balances">Balances</button>
     <button data-ptab="calendar">Pay Calendar</button>
   </div>
   <div class="pmain">
@@ -107,6 +108,15 @@
       <h3 class="psec">Paychecks — reconciled against deposit advices</h3>
       <div class="note">Tracked lines: <b>base</b>, <b>overage</b>, <b>premiums</b>. <span class="pill match">match</span> paid correctly · <span class="pill underpaid">underpaid</span> came up short · <span class="pill unusual">unusual</span> differs.</div>
       <div id="pay_paychecksOut"></div>
+    </section>
+    <section class="ppanel" id="ppanel_balances">
+      <h3 class="psec">Sick &amp; vacation balances</h3>
+      <div class="note">Pulled from the <b>UPS Flight Payroll Register</b> each pay period. Sick accrues <b>5:30 per pay period</b> (~71:30/yr). Sick hours are shown as HH:MM; the dollar figure is that balance at the current hourly rate.</div>
+      <div id="pay_balCards"></div>
+      <h3 class="psec" style="margin-top:18px">Sick history</h3>
+      <table id="pay_sickTable"></table>
+      <h3 class="psec" style="margin-top:18px">Vacation history</h3>
+      <table id="pay_vacTable"></table>
     </section>
     <section class="ppanel" id="ppanel_calendar">
       <h3 class="psec">Bid period → pay period map</h3>
@@ -154,9 +164,9 @@ const PayApp = (function(){
   function renderHours(){
     const rows=DB.hours.slice().sort((a,b)=>a.pp.localeCompare(b.pp));
     const anyJa=(DB.ja||[]).length>0;
-    let h="<tr><th>Pay Pd</th><th>Bid Pd</th><th>Scheduled</th><th>Line</th><th>Pay</th>"+(anyJa?"<th>JA (150%)</th>":"")+"</tr>";
+    let h="<tr><th>Pay Pd</th><th>Bid Pd</th><th>Scheduled</th><th>Line</th><th>Pay</th>"+(anyJa?"<th>JA (150%)</th>":"")+"<th>Duty Days</th><th>Block Paid</th><th>Credit Cap</th></tr>";
     rows.forEach(r=>{ const jn=jaNomMin(r.pp);
-      h+=`<tr><td>${ppl(r.pp)}</td><td>${r.bid}</td><td class="mono">${r.sched||"—"}</td><td class="mono">${r.line||"—"}</td><td class="mono"><b>${r.pay||"—"}</b></td>`+(anyJa?`<td class="mono">${jn?(fm(jn)+` <span class="pill special">×1.5</span>`):"—"}</td>`:"")+`</tr>`; });
+      h+=`<tr><td>${ppl(r.pp)}</td><td>${r.bid}</td><td class="mono">${r.sched||"—"}</td><td class="mono">${r.line||"—"}</td><td class="mono"><b>${r.pay||"—"}</b></td>`+(anyJa?`<td class="mono">${jn?(fm(jn)+` <span class="pill special">×1.5</span>`):"—"}</td>`:"")+`<td class="mono">${r.dutyDays||"—"}</td><td class="mono">${r.blockPaid||"—"}</td><td class="mono">${r.creditCap||"—"}</td></tr>`; });
     $('pay_hoursTable').innerHTML=h;
   }
   function renderPaychecks(){
@@ -238,7 +248,37 @@ const PayApp = (function(){
       const items=pending.map(p=>{ const m=mult(p.code); const v=p.hours?` — ${fm(eff(p))} paid (${p.hours}×${m})`:" — hours TBD"; return `<b>${p.code}</b> ${p.trip}${v}`; }).join(", ");
       return `<div class="${cls}" style="margin-bottom:8px">${icon} <b>PP ${pp.slice(2)}: ${pending.length} premium${pending.length>1?"s":""} still pending</b> · ${when}<br><span style="font-size:12px">${items} · verify at flightops.inside.ups.com → Premium Pay → PP ${pp.slice(2)}</span></div>`; }).join("");
   }
-  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBid(); renderCal(); renderCheckSel(); }
+  function renderBalances(){
+    const B=DB.balances||{}, S=(DB.sick||[]).slice().sort((a,b)=>a.pp.localeCompare(b.pp)), V=(DB.vacation||[]).slice().sort((a,b)=>a.pp.localeCompare(b.pp));
+    const cur=S.length?S[S.length-1]:null;
+    const sb=toMin(B.sickBalance||(cur&&cur.balance)||"");
+    const acc=toMin(B.sickAccrualPerPeriod||"5:30");
+    let prev=S.length>1?toMin(S[S.length-2].balance):null;
+    const delta=prev!==null?sb-prev:null;
+    const proj=sb+acc*26;
+    $('pay_balCards').innerHTML=
+      '<div class="grid2">'
+      +'<div class="pcard"><div class="muted">Sick balance'+(B.asOf?" — as of "+fd(B.asOf):"")+'</div>'
+      +'<div class="big">'+(sb?fm(sb):"—")+'</div>'
+      +'<div class="muted">'+(sb?money(sb):"")+' at $'+DB.rate+'/hr · '+(sb/60).toFixed(1)+' hrs</div>'
+      +(delta!==null?'<div class="due-line" style="margin-top:8px"><span class="pill '+(delta>=0?"approved":"underpaid")+'">'+(delta>=0?"+":"")+fm(delta)+'</span> <span class="muted">vs. prior pay period</span></div>':"")
+      +'<div class="due-line"><span class="muted">Accrues '+fm(acc)+' per pay period · projected '+fm(proj)+' in 12 months if unused</span></div></div>'
+      +'<div class="pcard"><div class="muted">Banked vacation'+(B.asOf?" — as of "+fd(B.asOf):"")+'</div>'
+      +'<div class="big">'+(B.vacationBanked||"—")+'</div>'
+      +'<div class="muted">'+(B.vacationBanked?money(toMin(B.vacationBanked)):"")+' at $'+DB.rate+'/hr</div>'
+      +(B.vacationBankedUsed?'<div class="due-line" style="margin-top:8px"><span class="muted">'+B.vacationBankedUsed+' used this pay period</span></div>':"")
+      +'</div></div>';
+
+    let h="<tr><th>Pay Pd</th><th>Period End</th><th>Used</th><th>Accrued</th><th>Balance</th><th>Change</th><th>Note</th></tr>";
+    S.forEach((r,i)=>{ const d=i>0?toMin(r.balance)-toMin(S[i-1].balance):null;
+      h+='<tr><td>'+ppl(r.pp)+'</td><td>'+(r.periodEnd?fd(r.periodEnd):"—")+'</td><td class="mono">'+(r.used||"—")+'</td><td class="mono">'+(r.accrued||"—")+'</td><td class="mono"><b>'+(r.balance||"—")+'</b></td><td class="mono">'+(d===null?"—":'<span class="pill '+(d>=0?"approved":"underpaid")+'">'+(d>=0?"+":"")+fm(d)+'</span>')+'</td><td class="muted">'+(r.memo||"")+'</td></tr>'; });
+    $('pay_sickTable').innerHTML=S.length?h:"<tr><td class='muted'>No sick data yet.</td></tr>";
+
+    let v="<tr><th>Pay Pd</th><th>Period End</th><th>Banked Used</th><th>Banked Balance</th><th>Note</th></tr>";
+    V.forEach(r=>{ v+='<tr><td>'+ppl(r.pp)+'</td><td>'+(r.periodEnd?fd(r.periodEnd):"—")+'</td><td class="mono">'+(r.bankedUsed||"—")+'</td><td class="mono"><b>'+(r.banked||"—")+'</b></td><td class="muted">'+(r.memo||"")+'</td></tr>'; });
+    $('pay_vacTable').innerHTML=V.length?v:"<tr><td class='muted'>No vacation data yet.</td></tr>";
+  }
+  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBalances(); renderBid(); renderCal(); renderCheckSel(); }
   function wireTabs(){ document.querySelectorAll('#payapp .tabs button').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('ppanel_'+b.dataset.ptab).classList.add('active'); }; }); }
 
   async function init(){
@@ -253,7 +293,7 @@ const PayApp = (function(){
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const DATA = await res.json();
       CHECKS=DATA.checks||[]; BIDMAP=DATA.bidMap||[]; PAYCHECKS=DATA.paychecks||[];
-      DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17};
+      DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17,sick:DATA.sick||[],vacation:DATA.vacation||[],balances:DATA.balances||{}};
       const ri=$('pay_rateInput'); ri.value=DB.rate; ri.onchange=()=>{ const v=parseFloat(ri.value); if(v>0){ DB.rate=v; renderLookup(); } };
       renderAllPay();
       const lu = DATA.lastUpdated ? new Date(DATA.lastUpdated).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) : 'unknown';
