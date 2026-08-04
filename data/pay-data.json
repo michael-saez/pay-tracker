@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:52:20Z",
+  "lastUpdated": "2026-08-04T04:59:32Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -98,11 +98,21 @@
     {
       "pp": "2603",
       "bid": "2602",
-      "sched": "",
+      "sched": "75:32",
       "line": "76:04",
       "pay": "76:04",
       "registerVerified": "76:04",
-      "note": "Predates the tracker \u2014 Actual Credit only, from the PP2605 register's history column. No register on file."
+      "note": "Register now on file (previously Actual-Credit-only): 12 duty days, cap 76:04, block paid 65:43, intl premium 72:27, block-to-block 0:29. Sick balance 209:31 (accrued 5:30, no sick used).",
+      "beginLine": "75:32",
+      "beginPay": "75:32",
+      "endLine": "76:04",
+      "endPay": "76:04",
+      "dutyDays": 12,
+      "creditCap": "76:04",
+      "blockPaid": "65:43",
+      "intlPremium": "72:27",
+      "blockToBlock": "0:29",
+      "registerPeriod": "2026-02-22 to 2026-03-22"
     },
     {
       "pp": "2604",
@@ -114,7 +124,14 @@
       "beginLine": "77:46",
       "beginPay": "77:46",
       "endLine": "99:01",
-      "endPay": "99:01"
+      "endPay": "99:01",
+      "dutyDays": 13,
+      "creditCap": "99:01",
+      "blockPaid": "49:22",
+      "intlPremium": "103:39",
+      "blockToBlock": "0:16",
+      "registerPeriod": "2026-03-22 to 2026-04-19",
+      "note": "Register now on file: 13 duty days, cap 99:01, block paid 49:22, intl premium 103:39, block-to-block 0:16. Sick balance 215:01 (accrued 5:30, no sick used)."
     },
     {
       "pp": "2605",
@@ -175,6 +192,43 @@
       "sickUsed": "4:00",
       "vacBankedUsed": "18:00",
       "registerPeriod": "2026-06-14 to 2026-07-12"
+    },
+    {
+      "pp": "2601",
+      "bid": "2601",
+      "sched": "85:07",
+      "line": "85:07",
+      "pay": "85:07",
+      "registerVerified": "85:07",
+      "beginLine": "85:07",
+      "beginPay": "85:07",
+      "endLine": "85:07",
+      "endPay": "85:07",
+      "dutyDays": 14,
+      "creditCap": "34:05",
+      "blockPaid": "20:36",
+      "intlPremium": "26:27",
+      "registerPeriod": "2025-12-28 to 2026-01-25",
+      "note": "Register: 14 duty days, cap 34:05, block paid 20:36, intl premium 26:27. Heavy vacation period (VAC block 1/4-1/10) \u2014 line/pay credit unchanged begin-to-end. Sick balance 198:31 (accrued 5:30, no sick used)."
+    },
+    {
+      "pp": "2602",
+      "bid": "2602",
+      "sched": "74:24",
+      "line": "74:25",
+      "pay": "75:00",
+      "registerVerified": "75:00",
+      "beginLine": "74:24",
+      "beginPay": "75:00",
+      "endLine": "74:25",
+      "endPay": "75:00",
+      "dutyDays": 13,
+      "creditCap": "74:25",
+      "blockPaid": "32:37",
+      "intlPremium": "54:07",
+      "blockToBlock": "0:01",
+      "registerPeriod": "2026-01-25 to 2026-02-22",
+      "note": "Register: 13 duty days, cap 74:25, block paid 32:37, intl premium 54:07, block-to-block 0:01. Sick balance 204:01 (accrued 5:30, no sick used)."
     }
   ],
   "ja": [
@@ -768,6 +822,38 @@
     }
   },
   "sick": [
+    {
+      "pp": "2601",
+      "periodEnd": "2026-01-25",
+      "used": "",
+      "accrued": "5:30",
+      "balance": "198:31",
+      "memo": "Register PP 12/28-01/25. No sick used."
+    },
+    {
+      "pp": "2602",
+      "periodEnd": "2026-02-22",
+      "used": "",
+      "accrued": "5:30",
+      "balance": "204:01",
+      "memo": "Register PP 01/25-02/22. No sick used."
+    },
+    {
+      "pp": "2603",
+      "periodEnd": "2026-03-22",
+      "used": "",
+      "accrued": "5:30",
+      "balance": "209:31",
+      "memo": "Register PP 02/22-03/22. No sick used."
+    },
+    {
+      "pp": "2604",
+      "periodEnd": "2026-04-19",
+      "used": "",
+      "accrued": "5:30",
+      "balance": "215:01",
+      "memo": "Register PP 03/22-04/19. No sick used."
+    },
     {
       "pp": "2605",
       "periodEnd": "2026-05-17",
