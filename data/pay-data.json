@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T05:06:33Z",
+  "lastUpdated": "2026-08-04T05:09:31Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -536,13 +536,6 @@
     }
   ],
   "checks": [
-    {
-      "date": "2026-01-05",
-      "pp": null,
-      "type": "special",
-      "adjFrom": null,
-      "note": "Sick Buy Off Check"
-    },
     {
       "date": "2026-01-12",
       "pp": "2601",
