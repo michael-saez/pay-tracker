@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:41:58Z",
+  "lastUpdated": "2026-08-04T04:43:56Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -208,8 +208,8 @@
     },
     {
       "date": "2026-01-26",
-      "net": "12071.80",
-      "status": "unusual",
+      "net": "4517.95",
+      "status": "match",
       "base": {
         "actual": "37:30",
         "expected": "37:30"
@@ -222,7 +222,25 @@
         "actual": "00:00",
         "expected": "00:00"
       },
-      "note": "TWO separate deposit advices both dated 1/26/2026, PP 1/11-1/24/26 \u2014 flagged as unusual since only one checks[] entry exists for this date. (A) #198782291: regular base check, ADV NEXT PAY 37:30 $9,087.00, net $4,517.95. (B) #198953223: separate payment, VACATION 45:00 $10,904.40 (a vacation payout, no ADV NEXT PAY line), net $7,553.85. Combined net shown here = $12,071.80. Ask Michael to confirm whether (B) was a vacation cash-out and whether a distinct 'special' checks[] entry should be added like the 1/5 Sick Buy Off Check."
+      "note": "Deposit advice #198782291 (PP 1/11-1/24/26, rate $242.32) \u2014 the regular base check. No register on file to verify expected \u2014 recorded as-observed."
+    },
+    {
+      "date": "2026-01-26",
+      "net": "7553.85",
+      "status": "match",
+      "base": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "Deposit advice #198953223 (PP 1/11-1/24/26) \u2014 separate vacation payout, VACATION 45:00 $10,904.40, no ADV NEXT PAY/base line. Net $7,553.85. Corresponds to the new 'special' checks[] entry dated 1/26/2026."
     },
     {
       "date": "2026-02-09",
@@ -466,6 +484,13 @@
       "type": "base",
       "adjFrom": null,
       "note": ""
+    },
+    {
+      "date": "2026-01-26",
+      "pp": "2601",
+      "type": "special",
+      "adjFrom": null,
+      "note": "Vacation payout (45:00 VACATION)"
     },
     {
       "date": "2026-02-09",
