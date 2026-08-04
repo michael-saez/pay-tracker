@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:16:12Z",
+  "lastUpdated": "2026-08-04T04:22:18Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -598,16 +598,27 @@
     "windowDays": 365,
     "warnAt": 5,
     "countRule": "event",
-    "note": "PLACEHOLDER \u2014 pending Michael's copy of the actual policy. Assumed: 7 sick CALLS (events, not hours) in a rolling 365-day window triggers a phone call / formal attendance tracking. One call = one event regardless of how many days or hours it covers."
+    "note": "PLACEHOLDER \u2014 pending Michael's copy of the actual policy. Assumed: 7 sick CALLS (events, not hours) in a rolling 365-day window triggers a phone call / formal attendance tracking. One call = one event regardless of how many days or hours it covers.",
+    "countsNote": "Each event has a 'counts' field: 'yes' (counts toward the rolling total), 'no' (excluded, e.g. OJI/FMLA-protected), 'unknown' (unverified \u2014 shown separately, NOT added to the total)."
   },
   "sickEvents": [
+    {
+      "date": "2026-06-02",
+      "pp": "2606",
+      "hours": "13:47",
+      "trip": "A70735",
+      "calledFrom": "",
+      "counts": "unknown",
+      "note": "Sick hours used following an OJI (on-the-job injury) on 6/2. 13:47 charged on the PP2606 register. UNCONFIRMED whether UPS logged this as a sick CALL \u2014 OJI-related absence may not count as an attendance event. Verify before treating it as one."
+    },
     {
       "date": "2026-07-11",
       "pp": "2607",
       "hours": "4:00",
       "trip": "",
       "calledFrom": "",
-      "note": "4:00 sick charged on the PP2607 register (06/14-07/12)."
+      "note": "4:00 sick charged on the PP2607 register (06/14-07/12).",
+      "counts": "yes"
     },
     {
       "date": "2026-07-22",
@@ -615,7 +626,8 @@
       "hours": "",
       "trip": "",
       "calledFrom": "",
-      "note": "Logged manually. Hours pending the PP2608 register."
+      "note": "Logged manually. Hours pending the PP2608 register.",
+      "counts": "yes"
     }
   ]
 }
