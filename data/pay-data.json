@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:06:53Z",
+  "lastUpdated": "2026-08-04T04:10:14Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -569,6 +569,14 @@
       "trip": "",
       "calledFrom": "",
       "note": "4:00 sick charged on the PP2607 register (06/14-07/12)."
+    },
+    {
+      "date": "2026-07-22",
+      "pp": "2608",
+      "hours": "",
+      "trip": "",
+      "calledFrom": "",
+      "note": "Logged manually. Hours pending the PP2608 register."
     }
   ]
 }
