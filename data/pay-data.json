@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:22:18Z",
+  "lastUpdated": "2026-08-04T04:41:58Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -188,6 +188,186 @@
     }
   ],
   "paychecks": [
+    {
+      "date": "2026-01-12",
+      "net": "9774.04",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "20:17",
+        "expected": "20:17"
+      },
+      "premium": {
+        "actual": "16:45",
+        "expected": "16:45"
+      },
+      "note": "Deposit advice #191019073 (PP 12/28/25-1/10/26, rate $242.32). No prior-period register on file (pp2513/2601) to independently verify expected overage/premium \u2014 recorded as-observed from the advice, all internally consistent. Also included: DOMICILE/INTL/PACRIM PDM, INTL PREMIUM."
+    },
+    {
+      "date": "2026-01-26",
+      "net": "12071.80",
+      "status": "unusual",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "TWO separate deposit advices both dated 1/26/2026, PP 1/11-1/24/26 \u2014 flagged as unusual since only one checks[] entry exists for this date. (A) #198782291: regular base check, ADV NEXT PAY 37:30 $9,087.00, net $4,517.95. (B) #198953223: separate payment, VACATION 45:00 $10,904.40 (a vacation payout, no ADV NEXT PAY line), net $7,553.85. Combined net shown here = $12,071.80. Ask Michael to confirm whether (B) was a vacation cash-out and whether a distinct 'special' checks[] entry should be added like the 1/5 Sick Buy Off Check."
+    },
+    {
+      "date": "2026-02-09",
+      "net": "7111.68",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "10:07",
+        "expected": "10:07"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "Deposit advice #206517122 (PP 1/25-2/7/26, rate $242.32). No register on file to verify expected \u2014 recorded as-observed. VAC ON DAY OFF 6:00 $1,453.92 and DISTANCE LEARN 2:45 $666.38 also present."
+    },
+    {
+      "date": "2026-02-23",
+      "net": "4496.80",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "17:15",
+        "expected": "17:15"
+      },
+      "note": "Deposit advice #214336004 (PP 2/8-2/21/26, rate $242.32). No register on file to verify expected \u2014 recorded as-observed."
+    },
+    {
+      "date": "2026-03-09",
+      "net": "7369.76",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "Deposit advice #222750589 (PP 2/22-3/7/26, rate $242.32). No register on file to verify expected \u2014 recorded as-observed."
+    },
+    {
+      "date": "2026-03-23",
+      "net": "4530.65",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "Deposit advice #230811098 (PP 3/8-3/21/26, rate $242.32). No register on file to verify expected \u2014 recorded as-observed."
+    },
+    {
+      "date": "2026-04-06",
+      "net": "6278.26",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "01:04",
+        "expected": "01:04"
+      },
+      "premium": {
+        "actual": "02:00",
+        "expected": "02:00"
+      },
+      "note": "Deposit advice #240498261 (PP 3/22-4/4/26). Rate changed mid-period from $242.32 to $247.17; also RAISE retro-pay line 78:04 $378.64. No register on file to verify expected \u2014 recorded as-observed."
+    },
+    {
+      "date": "2026-04-20",
+      "net": "6706.09",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "Deposit advice #248125004 (PP 4/5-4/18/26, rate $247.17). No register on file to verify expected \u2014 recorded as-observed."
+    },
+    {
+      "date": "2026-05-04",
+      "net": "13234.17",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "24:01",
+        "expected": "24:01"
+      },
+      "premium": {
+        "actual": "06:47",
+        "expected": "06:47"
+      },
+      "note": "Deposit advice #256159424 (PP 4/19-5/2/26, rate $247.17). No register on file to verify expected \u2014 recorded as-observed."
+    },
+    {
+      "date": "2026-05-18",
+      "net": "6613.20",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "overage": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "premium": {
+        "actual": "00:00",
+        "expected": "00:00"
+      },
+      "note": "Deposit advice #264520439 (PP 5/3-5/16/26, rate $247.17). No register on file to verify expected \u2014 recorded as-observed."
+    },
     {
       "date": "2026-06-01",
       "net": "14388.92",
