@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T03:41:15Z",
+  "lastUpdated": "2026-08-04T04:06:53Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -552,6 +552,23 @@
       "banked": "15:00",
       "bankedUsed": "18:00",
       "memo": "18:00 banked vacation used 6/30-7/05."
+    }
+  ],
+  "sickPolicy": {
+    "threshold": 7,
+    "windowDays": 365,
+    "warnAt": 5,
+    "countRule": "event",
+    "note": "PLACEHOLDER \u2014 pending Michael's copy of the actual policy. Assumed: 7 sick CALLS (events, not hours) in a rolling 365-day window triggers a phone call / formal attendance tracking. One call = one event regardless of how many days or hours it covers."
+  },
+  "sickEvents": [
+    {
+      "date": "2026-07-11",
+      "pp": "2607",
+      "hours": "4:00",
+      "trip": "",
+      "calledFrom": "",
+      "note": "4:00 sick charged on the PP2607 register (06/14-07/12)."
     }
   ]
 }
