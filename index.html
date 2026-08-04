@@ -147,7 +147,7 @@ async function logout() {
 }
 
 const PayApp = (function(){
-  let DB=null, CHECKS=[], BIDMAP=[], PAYCHECKS=[];
+  let DB=null, CHECKS=[], BIDMAP=[], PAYCHECKS=[], BANKSTMTS=[];
   const $=id=>document.getElementById(id);
   const money=min=>"$"+(min/60*DB.rate).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
   const fd=d=>new Date(d+"T00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
@@ -336,17 +336,38 @@ const PayApp = (function(){
     const missRegs=closed.filter(p=>!(hoursBy[p]&&hoursBy[p].registerPeriod))
       .map(p=>({pp:p, partial:!!hoursBy[p]})).sort((a,b)=>b.pp.localeCompare(a.pp));
     const openPp=allPps.filter(p=>!settled.has(p))[0]||null;
-    return {missChecks,missRegs,nextCheck,openPp,T};
+
+    // bank statements: expect one per calendar month, from the first tracked month through
+    // last month (this month's statement isn't out yet until early next month)
+    const haveStmt=new Set(BANKSTMTS.filter(s=>s.received).map(s=>s.month));
+    const firstMonth=BANKSTMTS.length?BANKSTMTS.map(s=>s.month).sort()[0]:null;
+    const missStmts=[];
+    if(firstMonth){
+      const [fy,fm]=firstMonth.split('-').map(Number);
+      const now=new Date(); let y=fy,m=fm;
+      const lastFullY=now.getMonth()===0?now.getFullYear()-1:now.getFullYear();
+      const lastFullM=now.getMonth()===0?12:now.getMonth();
+      while(y<lastFullY || (y===lastFullY && m<=lastFullM)){
+        const key=y+'-'+String(m).padStart(2,'0');
+        if(!haveStmt.has(key)) missStmts.push(key);
+        m++; if(m>12){m=1;y++;}
+      }
+    }
+    missStmts.sort((a,b)=>b.localeCompare(a));
+    return {missChecks,missRegs,missStmts,nextCheck,openPp,T};
   }
   function renderCoverage(){
-    const C=coverageData(); const n=C.missChecks.length+C.missRegs.length;
+    const C=coverageData(); const n=C.missChecks.length+C.missRegs.length+C.missStmts.length;
+    const parts=[];
+    if(C.missChecks.length) parts.push(C.missChecks.length+' earnings statement'+(C.missChecks.length===1?'':'s'));
+    if(C.missRegs.length) parts.push(C.missRegs.length+' flight register'+(C.missRegs.length===1?'':'s'));
+    if(C.missStmts.length) parts.push(C.missStmts.length+' bank statement'+(C.missStmts.length===1?'':'s'));
+    const mostRecent = C.missChecks[0]?fd(C.missChecks[0].date):(C.missRegs[0]?ppl(C.missRegs[0].pp):C.missStmts[0]);
     const brief = n===0
-      ? '<div class="pcard"><b>\u2705 Nothing missing.</b> <span class="muted">Every issued check has a deposit advice and every closed pay period has a register.</span></div>'
+      ? '<div class="pcard"><b>\u2705 Nothing missing.</b> <span class="muted">Every issued check has a deposit advice, every closed pay period has a register, and every bank statement is on file.</span></div>'
       : '<div class="note"><b>\u{1F4C4} '+n+' document'+(n===1?'':'s')+' missing.</b> '
-        +(C.missChecks.length?C.missChecks.length+' earnings statement'+(C.missChecks.length===1?'':'s'):'')
-        +(C.missChecks.length&&C.missRegs.length?' · ':'')
-        +(C.missRegs.length?C.missRegs.length+' flight register'+(C.missRegs.length===1?'':'s'):'')
-        +' — most recent: '+(C.missChecks[0]?fd(C.missChecks[0].date):ppl(C.missRegs[0].pp))
+        +parts.join(' · ')
+        +' — most recent: '+mostRecent
         +'. <a href="#" onclick="PayApp.goCoverage();return false;"><b>See the list \u2192</b></a></div>';
     $('pay_coverage').innerHTML=brief;
 
@@ -366,6 +387,13 @@ const PayApp = (function(){
       C.missRegs.forEach(r=>{ const hh=DB.hours.find(x=>x.pp===r.pp);
         h+='<tr><td>'+ppl(r.pp)+'</td><td>'+(r.partial?'<span class="pill unusual">partial</span>':'<span class="pill not-logged">no data</span>')+'</td><td class="muted">'+(hh?('pay hours '+(hh.pay||"—")+(hh.note?' — '+hh.note:'')):'nothing on file')+'</td></tr>'; });
       out+='<table>'+h+'</table>'; }
+
+    out+='<h3 class="psec" style="margin-top:18px">Bank statements not yet uploaded</h3>';
+    if(!C.missStmts.length) out+='<div class="pcard"><b>\u2705 Every bank statement is on file.</b> <span class="muted">Morgan Stanley / E*TRADE Max-Rate Checking, one per calendar month.</span></div>';
+    else { let h='<tr><th>Month</th><th>Status</th></tr>';
+      C.missStmts.forEach(m=>{ const [yy,mm]=m.split('-'); const mn=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mm,10)];
+        h+='<tr><td>'+mn+' '+yy+'</td><td><span class="pill not-logged">not uploaded</span></td></tr>'; });
+      out+='<table>'+h+'</table><div class="muted" style="margin-top:6px">Pull the PDF statement from the Morgan Stanley / E*TRADE portal (Statements &amp; Documents) and upload it to reconcile UPS payroll deposits and log transactions to the Life Dashboard.</div>'; }
     $('pay_coverageFull').innerHTML=out;
   }
   function goCoverage(){ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); document.querySelector('#payapp .tabs button[data-ptab="coverage"]').classList.add('active'); $('ppanel_coverage').classList.add('active'); }
@@ -383,7 +411,7 @@ const PayApp = (function(){
       }
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const DATA = await res.json();
-      CHECKS=DATA.checks||[]; BIDMAP=DATA.bidMap||[]; PAYCHECKS=DATA.paychecks||[];
+      CHECKS=DATA.checks||[]; BIDMAP=DATA.bidMap||[]; PAYCHECKS=DATA.paychecks||[]; BANKSTMTS=DATA.bankStatements||[];
       DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17,sick:DATA.sick||[],sickEvents:DATA.sickEvents||[],sickPolicy:DATA.sickPolicy||{},vacation:DATA.vacation||[],balances:DATA.balances||{}};
       const ri=$('pay_rateInput'); ri.value=DB.rate; ri.onchange=()=>{ const v=parseFloat(ri.value); if(v>0){ DB.rate=v; renderLookup(); } };
       renderAllPay();
