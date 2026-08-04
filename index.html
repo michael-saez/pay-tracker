@@ -113,6 +113,8 @@
       <h3 class="psec">Sick &amp; vacation balances</h3>
       <div class="note">Pulled from the <b>UPS Flight Payroll Register</b> each pay period. Sick accrues <b>5:30 per pay period</b> (~71:30/yr). Sick hours are shown as HH:MM; the dollar figure is that balance at the current hourly rate.</div>
       <div id="pay_balCards"></div>
+      <h3 class="psec" style="margin-top:22px">Sick call events</h3>
+      <div id="pay_sickEvents"></div>
       <h3 class="psec" style="margin-top:18px">Sick history</h3>
       <table id="pay_sickTable"></table>
       <h3 class="psec" style="margin-top:18px">Vacation history</h3>
@@ -248,6 +250,34 @@ const PayApp = (function(){
       const items=pending.map(p=>{ const m=mult(p.code); const v=p.hours?` — ${fm(eff(p))} paid (${p.hours}×${m})`:" — hours TBD"; return `<b>${p.code}</b> ${p.trip}${v}`; }).join(", ");
       return `<div class="${cls}" style="margin-bottom:8px">${icon} <b>PP ${pp.slice(2)}: ${pending.length} premium${pending.length>1?"s":""} still pending</b> · ${when}<br><span style="font-size:12px">${items} · verify at flightops.inside.ups.com → Premium Pay → PP ${pp.slice(2)}</span></div>`; }).join("");
   }
+  function renderSickEvents(){
+    const P=DB.sickPolicy||{}, EV=(DB.sickEvents||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
+    const win=P.windowDays||365, thr=P.threshold||7, warn=P.warnAt||Math.max(1,thr-2);
+    const today=new Date(); const cut=new Date(today.getTime()-win*86400000);
+    const inWin=EV.filter(e=>new Date(e.date+"T00:00")>=cut);
+    const n=inWin.length;
+    const state=n>=thr?"underpaid":n>=warn?"unusual":"approved";
+    const label=n>=thr?"AT / OVER THRESHOLD":n>=warn?"approaching":"clear";
+    // when does the oldest in-window call roll off (i.e. count drops)
+    const oldest=inWin.length?inWin[inWin.length-1]:null;
+    let rollOff="";
+    if(oldest){ const ro=new Date(new Date(oldest.date+"T00:00").getTime()+win*86400000);
+      rollOff='Oldest call ('+fd(oldest.date)+') rolls out of the window on <b>'+ro.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+'</b>.'; }
+    let out='<div class="pcard"><div class="muted">Sick calls in the trailing '+win+' days</div>'
+      +'<div class="big">'+n+' <span style="font-size:15px;font-weight:500;color:#7a8585">of '+thr+'</span></div>'
+      +'<div style="margin:8px 0"><span class="pill '+state+'">'+label+'</span> <span class="muted">'+Math.max(0,thr-n)+' remaining before the '+thr+'-call trigger</span></div>'
+      +(rollOff?'<div class="due-line muted">'+rollOff+'</div>':"")
+      +(P.note?'<div class="due-line muted" style="font-style:italic">'+P.note+'</div>':"")
+      +'</div>';
+    if(n>=thr) out='<div class="alert"><b>\u26a0 '+n+' sick calls in the last '+win+' days</b> — at or past the '+thr+'-call threshold. Expect a call / formal attendance tracking.</div>'+out;
+    else if(n>=warn) out='<div class="note"><b>'+n+' sick calls in the last '+win+' days.</b> '+(thr-n)+' more would hit the '+thr+'-call threshold.</div>'+out;
+
+    let h="<tr><th>Date</th><th>Pay Pd</th><th>Hours</th><th>Trip</th><th>In window</th><th>Note</th></tr>";
+    EV.forEach(e=>{ const ok=new Date(e.date+"T00:00")>=cut;
+      h+='<tr><td>'+fd(e.date)+'</td><td>'+(e.pp?ppl(e.pp):"—")+'</td><td class="mono">'+(e.hours||"—")+'</td><td class="mono">'+(e.trip||"—")+'</td><td>'+(ok?'<span class="pill approved">counts</span>':'<span class="pill unverified">rolled off</span>')+'</td><td class="muted">'+(e.note||"")+'</td></tr>'; });
+    out += EV.length?('<table>'+h+'</table>'):'<div class="muted">No sick calls logged yet.</div>';
+    $('pay_sickEvents').innerHTML=out;
+  }
   function renderBalances(){
     const B=DB.balances||{}, S=(DB.sick||[]).slice().sort((a,b)=>a.pp.localeCompare(b.pp)), V=(DB.vacation||[]).slice().sort((a,b)=>a.pp.localeCompare(b.pp));
     const cur=S.length?S[S.length-1]:null;
@@ -278,7 +308,7 @@ const PayApp = (function(){
     V.forEach(r=>{ v+='<tr><td>'+ppl(r.pp)+'</td><td>'+(r.periodEnd?fd(r.periodEnd):"—")+'</td><td class="mono">'+(r.bankedUsed||"—")+'</td><td class="mono"><b>'+(r.banked||"—")+'</b></td><td class="muted">'+(r.memo||"")+'</td></tr>'; });
     $('pay_vacTable').innerHTML=V.length?v:"<tr><td class='muted'>No vacation data yet.</td></tr>";
   }
-  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBalances(); renderBid(); renderCal(); renderCheckSel(); }
+  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBalances(); renderSickEvents(); renderBid(); renderCal(); renderCheckSel(); }
   function wireTabs(){ document.querySelectorAll('#payapp .tabs button').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('ppanel_'+b.dataset.ptab).classList.add('active'); }; }); }
 
   async function init(){
@@ -293,7 +323,7 @@ const PayApp = (function(){
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const DATA = await res.json();
       CHECKS=DATA.checks||[]; BIDMAP=DATA.bidMap||[]; PAYCHECKS=DATA.paychecks||[];
-      DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17,sick:DATA.sick||[],vacation:DATA.vacation||[],balances:DATA.balances||{}};
+      DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17,sick:DATA.sick||[],sickEvents:DATA.sickEvents||[],sickPolicy:DATA.sickPolicy||{},vacation:DATA.vacation||[],balances:DATA.balances||{}};
       const ri=$('pay_rateInput'); ri.value=DB.rate; ri.onchange=()=>{ const v=parseFloat(ri.value); if(v>0){ DB.rate=v; renderLookup(); } };
       renderAllPay();
       const lu = DATA.lastUpdated ? new Date(DATA.lastUpdated).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) : 'unknown';
