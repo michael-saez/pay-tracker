@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T04:59:32Z",
+  "lastUpdated": "2026-08-04T05:06:33Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -209,7 +209,7 @@
       "blockPaid": "20:36",
       "intlPremium": "26:27",
       "registerPeriod": "2025-12-28 to 2026-01-25",
-      "note": "Register: 14 duty days, cap 34:05, block paid 20:36, intl premium 26:27. Heavy vacation period (VAC block 1/4-1/10) \u2014 line/pay credit unchanged begin-to-end. Sick balance 198:31 (accrued 5:30, no sick used)."
+      "note": "Register: 14 duty days, cap 34:05, block paid 20:36, intl premium 26:27. Heavy vacation period (VAC block 1/4-1/10) \u2014 line/pay credit unchanged begin-to-end. Sick balance 198:31 (accrued 5:30, no sick used). Prior check 12/29/2025 (PP 25-13, old-format statement, check date 12/29/25, rate $242.32) included a Sick Buy Off payout of $11,539.52 plus Reg Earn-GTY 37:30 $9,087.00 and Prior PP ADJ-Premium 2:00 $484.64 \u2014 predates this tracker's 2026 checks[] calendar so not given its own check entry; logged here for reference only."
     },
     {
       "pp": "2602",
