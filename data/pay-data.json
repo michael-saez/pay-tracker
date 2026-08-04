@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T05:09:31Z",
+  "lastUpdated": "2026-08-04T05:49:01Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -930,6 +930,50 @@
       "calledFrom": "",
       "note": "Logged manually. Hours pending the PP2608 register.",
       "counts": "yes"
+    }
+  ],
+  "bankStatements": [
+    {
+      "month": "2025-12",
+      "received": true,
+      "source": "ClientStatements_080426.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-01",
+      "received": true,
+      "source": "ClientStatements_080426.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-02",
+      "received": true,
+      "source": "ClientStatements_080426.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-03",
+      "received": true,
+      "source": "ClientStatements_080426.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-04",
+      "received": true,
+      "source": "ClientStatements_080426.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-05",
+      "received": true,
+      "source": "ClientStatements_080426.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-06",
+      "received": true,
+      "source": "ClientStatements_080426.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
     }
   ]
 }
