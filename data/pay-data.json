@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T03:35:09Z",
+  "lastUpdated": "2026-08-04T03:41:15Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -100,7 +100,8 @@
       "bid": "2603",
       "sched": "77:46",
       "line": "99:01",
-      "pay": "99:01"
+      "pay": "99:01",
+      "registerVerified": "99:01"
     },
     {
       "pp": "2605",
@@ -108,7 +109,8 @@
       "sched": "79:44",
       "line": "110:36",
       "pay": "110:36",
-      "registerVerified": "110:36"
+      "registerVerified": "110:36",
+      "ptt": "16:57"
     },
     {
       "pp": "2606",
@@ -116,7 +118,18 @@
       "sched": "80:34",
       "line": "94:36",
       "pay": "94:36",
-      "registerVerified": "94:36"
+      "registerVerified": "94:36",
+      "beginLine": "80:34",
+      "beginPay": "80:34",
+      "endLine": "94:36",
+      "endPay": "94:36",
+      "dutyDays": 14,
+      "creditCap": "80:49",
+      "blockPaid": "69:30",
+      "intlPremium": "67:44",
+      "sickUsed": "13:47",
+      "registerPeriod": "2026-05-17 to 2026-06-14",
+      "note": "Register: 14 duty days, cap 80:49, block paid 69:30, intl premium 67:44, 13:47 sick used. Banked vacation ending balance 33:00."
     },
     {
       "pp": "2607",
@@ -496,15 +509,49 @@
     "asOf": "2026-07-12",
     "source": "UPS Flight Payroll Register PP 06/14/26-07/12/26",
     "sickBalance": "213:44",
-    "sickAccruedPeriod": "5:30",
+    "sickAccrualPerPeriod": "5:30",
     "sickUsedPeriod": "4:00",
     "vacationBanked": "15:00",
     "vacationBankedUsed": "18:00",
     "perDiem": {
       "DM": "74:32",
       "IN": "25:10",
-      "EU": "69:52",
+      "EU": "36:25",
       "PR": "156:08"
     }
-  }
+  },
+  "sick": [
+    {
+      "pp": "2606",
+      "periodEnd": "2026-06-14",
+      "used": "13:47",
+      "accrued": "5:30",
+      "balance": "212:14",
+      "memo": "Register PP 05/17-06/14."
+    },
+    {
+      "pp": "2607",
+      "periodEnd": "2026-07-12",
+      "used": "4:00",
+      "accrued": "5:30",
+      "balance": "213:44",
+      "memo": "4:00 sick 7/11. Register PP 06/14-07/12."
+    }
+  ],
+  "vacation": [
+    {
+      "pp": "2606",
+      "periodEnd": "2026-06-14",
+      "banked": "33:00",
+      "bankedUsed": "",
+      "memo": "Register PP 05/17-06/14."
+    },
+    {
+      "pp": "2607",
+      "periodEnd": "2026-07-12",
+      "banked": "15:00",
+      "bankedUsed": "18:00",
+      "memo": "18:00 banked vacation used 6/30-7/05."
+    }
+  ]
 }
