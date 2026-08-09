@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T05:49:01Z",
+  "lastUpdated": "2026-08-09T06:33:18Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -90,8 +90,8 @@
       "date": "2026-07-28",
       "code": "AP2",
       "hours": "02:00",
-      "status": "Pending",
-      "memo": "L/O ICN ISO HKG"
+      "status": "Approved",
+      "memo": "L/O ICN ISO HKG \u2014 approved, verified #5141930 on 8/3/2026"
     }
   ],
   "hours": [
