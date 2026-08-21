@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-21T06:21:49Z",
+  "lastUpdated": "2026-08-21T06:27:09Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -552,7 +552,40 @@
         "actual": "44:21",
         "expected": "44:21"
       },
-      "note": "Deposit advice #306991697 (PP 7/12-7/25). All tracked lines match PP2607 register: overage = 126:59 - 75:00 - 44:21 JA = 7:38; premium 21:23 = AP2 2:00 + AP2 2:00 + LP1 10:15x1.5 + AP2 2:00; JUNIOR 150% 44:21 @ $370.76. Untracked extras: TRAINING DAYOFF 4:00 $988.68, VAC ON DAY OFF 6:00 $1,453.92, VACATION 45:00 $10,904.40, INTL PREMIUM 77.72 $349.74."
+      "note": "Deposit advice #306991697 (PP 7/12-7/25). All tracked lines match PP2607 register: overage = 126:59 - 75:00 - 44:21 JA = 7:38; premium 21:23 = AP2 2:00 + AP2 2:00 + LP1 10:15x1.5 + AP2 2:00; JUNIOR 150% 44:21 @ $370.76. Untracked extras: TRAINING DAYOFF 4:00 $988.68, VAC ON DAY OFF 6:00 $1,453.92, VACATION 45:00 $10,904.40, INTL PREMIUM 77.72 $349.74.",
+      "perDiem": {
+        "actualHoursByRegion": {
+          "DMSTIC": 74.53,
+          "INTL": 25.17,
+          "EURO": 69.87,
+          "PACRIM": 156.13
+        },
+        "calculatedHoursByRegion": {
+          "IN": 25.1667,
+          "EU": 69.8667,
+          "PR": 156.1333,
+          "DM": 74.5333,
+          "DMSTIC": 74.5333,
+          "INTL": 25.1667,
+          "EURO": 69.8667,
+          "PACRIM": 156.1333
+        },
+        "hoursMatch": true,
+        "hoursSource": "Summed perDiemByTrip for PP2607 - matched actual to within 0.2 min rounding across all four regions",
+        "actualDollars": {
+          "DOMICILE_TX": 10.29,
+          "DMSTIC_TX": 12.67,
+          "DMSTIC_NTX": 248.18,
+          "EURO_TX": 18.86,
+          "EURO_NTX": 250.13,
+          "INTL_TX": 15.61,
+          "INTL_NTX": 90.11,
+          "PACRIM_TX": 49.96,
+          "PACRIM_NTX": 558.95,
+          "total": 1254.76
+        },
+        "note": "This check confirmed the DMSTIC and EURO TX rates (0.17, 0.27/hr), completing all four regions."
+      }
     },
     {
       "date": "2026-08-10",
@@ -1204,8 +1237,8 @@
     }
   ],
   "perDiemRates": {
-    "asOf": "2026-08-24",
-    "source": "Deposit advice #323722466 (PP2608, check 8/24/26) \u2014 derived from actual TX+NTX line items",
+    "asOf": "2026-07-27 / 2026-08-24 (all four regions now confirmed)",
+    "source": "Deposit advices #306991697 (7/27/26, DMSTIC+EURO) and #323722466 (8/24/26, INTL+PACRIM)",
     "rates": {
       "INTL": {
         "tx": 0.62,
@@ -1218,18 +1251,18 @@
         "total": 3.9
       },
       "EURO": {
-        "tx": 0.0,
+        "tx": 0.27,
         "ntx": 3.58,
-        "total": 3.58,
-        "note": "NTX confirmed at $3.58/hr from a paycheck screenshot (undated crop, Reimbursements section only). No EURO PDM TX line ever observed - total treated as NTX-only ($3.58/hr) pending confirmation of a taxable portion."
+        "total": 3.85,
+        "note": "Fully confirmed (TX+NTX) from 7/27/26 check."
       },
       "DMSTIC": {
-        "tx": 0.158,
+        "tx": 0.17,
         "ntx": 3.33,
-        "total": 3.488,
-        "note": "NTX confirmed at $3.33/hr from the same screenshot. TX portion ($0.158/hr) still YTD-derived only, not seen on an actual current-period line."
+        "total": 3.5,
+        "note": "Fully confirmed (TX+NTX) from 7/27/26 check."
       }
     },
-    "note": "INTL/PACRIM fully confirmed (TX+NTX) from the 8/24/26 check. EURO/DMSTIC NTX confirmed from a separate undated paycheck screenshot (Reimbursements section, showing rate 3.5800 EURO, 3.3300 DMSTIC alongside matching 3.5800 INTL/PACRIM). TX portions for EURO/DMSTIC remain YTD-derived estimates."
+    "note": "All four regional rates confirmed directly from actual paychecks (TX+NTX): DMSTIC $3.50/hr, EURO $3.85/hr, INTL $4.20/hr, PACRIM $3.90/hr. No longer YTD-derived estimates."
   }
 }
