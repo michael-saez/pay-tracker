@@ -191,8 +191,8 @@ const PayApp = (function(){
     if(bad.length) out.insertAdjacentHTML("afterbegin",`<div class="alert"><b>⚠ ${bad.length} check(s) flagged underpaid:</b> ${bad.map(b=>fd(b.date)).join(", ")}.</div>`);
   }
   function renderBid(){
-    let h="<tr><th>Bid Pd #</th><th>App name</th><th>Pay periods</th><th>Note</th></tr>";
-    BIDMAP.forEach(b=>{ h+=`<tr><td>${b.bid}</td><td class="mono">BP ${b.app}</td><td>${b.pps.map(p=>"PP "+p.slice(2)).join(" + ")}</td><td class="muted">${b.note||""}</td></tr>`; });
+    let h="<tr><th>Bid Pd #</th><th>App name</th><th>Pay periods</th><th>Dates</th><th>Note</th></tr>";
+    BIDMAP.forEach(b=>{ h+=`<tr><td>${b.bid}</td><td class="mono">BP ${b.app}</td><td>${b.pps.map(p=>"PP "+p.slice(2)).join(" + ")}</td><td class="mono">${b.dates||"—"}</td><td class="muted">${b.note||""}</td></tr>`; });
     $('pay_bidTable').innerHTML=h;
   }
   function renderCal(){
