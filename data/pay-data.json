@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-21T06:19:23Z",
+  "lastUpdated": "2026-08-21T06:21:49Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -1219,17 +1219,17 @@
       },
       "EURO": {
         "tx": 0.0,
-        "ntx": 3.565,
-        "total": 3.565,
-        "note": "No EURO PDM TX line ever observed; derived from YTD NTX only (YTD $1507.81 / 423.02 hrs). Not verified this period (0 EURO hours)."
+        "ntx": 3.58,
+        "total": 3.58,
+        "note": "NTX confirmed at $3.58/hr from a paycheck screenshot (undated crop, Reimbursements section only). No EURO PDM TX line ever observed - total treated as NTX-only ($3.58/hr) pending confirmation of a taxable portion."
       },
       "DMSTIC": {
         "tx": 0.158,
         "ntx": 3.33,
-        "total": 3.49,
-        "note": "Derived from YTD (YTD TX $42.99/272.17hrs, YTD NTX $906.33/272.17hrs). Not verified this period (0 domestic hours)."
+        "total": 3.488,
+        "note": "NTX confirmed at $3.33/hr from the same screenshot. TX portion ($0.158/hr) still YTD-derived only, not seen on an actual current-period line."
       }
     },
-    "note": "CBA text rates ($2.00/$2.50/$3.00/$3.00) are the 2007-era baseline and are revised annually per Article 5 Section 4 - these are actual current rates read directly off a paycheck, not calculated from the CBA formula. INTL and PACRIM confirmed this period; EURO and DMSTIC are YTD-derived estimates pending a period with actual hours in those categories to confirm."
+    "note": "INTL/PACRIM fully confirmed (TX+NTX) from the 8/24/26 check. EURO/DMSTIC NTX confirmed from a separate undated paycheck screenshot (Reimbursements section, showing rate 3.5800 EURO, 3.3300 DMSTIC alongside matching 3.5800 INTL/PACRIM). TX portions for EURO/DMSTIC remain YTD-derived estimates."
   }
 }
