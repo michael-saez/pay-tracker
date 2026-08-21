@@ -77,6 +77,7 @@
     <button data-ptab="hours">Pay Hours</button>
     <button data-ptab="paychecks">Paychecks</button>
     <button data-ptab="balances">Balances</button>
+    <button data-ptab="perdiem">Per Diem</button>
     <button data-ptab="coverage">Missing Docs</button>
     <button data-ptab="calendar">Pay Calendar</button>
   </div>
@@ -121,6 +122,11 @@
       <table id="pay_sickTable"></table>
       <h3 class="psec" style="margin-top:18px">Vacation history</h3>
       <table id="pay_vacTable"></table>
+    </section>
+    <section class="ppanel" id="ppanel_perdiem">
+      <h3 class="psec">Per diem by pay period</h3>
+      <div class="note">Regional hours <b>away from domicile</b> (report to release), summed from trip-level data. Dollar figures use the most recently confirmed rate for that region — <b>INTL/PACRIM are confirmed</b> from an actual paycheck; <b>DMSTIC/EURO are YTD-derived estimates</b> until a period with hours in those regions confirms them. Where a check exists for that period, actual per-diem dollars from the deposit advice are shown alongside for a ballpark cross-check.</div>
+      <div id="pay_perDiemOut"></div>
     </section>
     <section class="ppanel" id="ppanel_coverage">
       <h3 class="psec">Document coverage</h3>
@@ -323,6 +329,52 @@ const PayApp = (function(){
     V.forEach(r=>{ v+='<tr><td>'+ppl(r.pp)+'</td><td>'+(r.periodEnd?fd(r.periodEnd):"—")+'</td><td class="mono">'+(r.bankedUsed||"—")+'</td><td class="mono"><b>'+(r.banked||"—")+'</b></td><td class="muted">'+(r.memo||"")+'</td></tr>'; });
     $('pay_vacTable').innerHTML=V.length?v:"<tr><td class='muted'>No vacation data yet.</td></tr>";
   }
+  function renderPerDiem(){
+    const out=$('pay_perDiemOut');
+    const trips=DB.perDiemByTrip||[];
+    if(!trips.length){ out.innerHTML='<div class="muted">No per-diem trip data logged yet.</div>'; return; }
+    const REGION_KEY={DM:"DMSTIC",IN:"INTL",EU:"EURO",PR:"PACRIM"};
+    const hm2dec=s=>{ if(!s) return 0; const [h,m]=s.split(":").map(Number); return h+(m||0)/60; };
+    const dec2hm=d=>{ const s=d<0?"-":""; d=Math.abs(d); const h=Math.floor(d); const m=Math.round((d-h)*60); return s+h+":"+String(m).padStart(2,"0"); };
+    // group by pp
+    const byPp={};
+    trips.forEach(t=>{ const p=byPp[t.pp]=byPp[t.pp]||{DM:0,IN:0,EU:0,PR:0,trips:[]};
+      ["DM","IN","EU","PR"].forEach(k=>{ if(t[k]) p[k]+=hm2dec(t[k]); });
+      p.trips.push(t); });
+    const rates=(DB.perDiemRates||{}).rates||{};
+    const pps=Object.keys(byPp).sort();
+    let h="<tr><th>Pay Pd</th><th>Domestic</th><th>Intl</th><th>Europe</th><th>Pac Rim</th><th>Est. $</th><th>Actual $ (check)</th><th>Verdict</th></tr>";
+    pps.forEach(pp=>{
+      const r=byPp[pp];
+      let est=0, anyRateMissing=false;
+      ["DM","IN","EU","PR"].forEach(k=>{
+        if(r[k]>0){ const rt=rates[REGION_KEY[k]]; if(rt) est+=r[k]*rt.total; else anyRateMissing=true; }
+      });
+      // find a paycheck whose perDiem.calculatedHoursByRegion matches this pp's data (matched via hours check earlier)
+      const pc=PAYCHECKS.find(p=>p.perDiem && p.perDiem.hoursSource && p.perDiem.hoursSource.includes("PP"+pp.slice(0,2)+pp.slice(2)) ) ||
+               PAYCHECKS.find(p=>p.perDiem && JSON.stringify(p.perDiem.calculatedHoursByRegion||{}).length>2 && (function(){
+                 const c=p.perDiem.calculatedHoursByRegion||{};
+                 return ["DM","IN","EU","PR"].every(k=>Math.abs((c[REGION_KEY[k]]||0)-r[k])<0.05);
+               })());
+      const actual=pc&&pc.perDiem&&pc.perDiem.actualDollars?pc.perDiem.actualDollars.total:null;
+      let verdict="—";
+      if(actual!=null){ const diffPct=Math.abs(actual-est)/(actual||1)*100; verdict=diffPct<=5?'<span class="pill match">match</span>':diffPct<=15?'<span class="pill unusual">ballpark (Δ'+diffPct.toFixed(0)+'%)</span>':'<span class="pill underpaid">off (Δ'+diffPct.toFixed(0)+'%)</span>'; }
+      else if(anyRateMissing) verdict='<span class="pill unverified">rate unconfirmed</span>';
+      h+=`<tr><td>${ppl(pp)}</td><td class="mono">${r.DM?dec2hm(r.DM):"—"}</td><td class="mono">${r.IN?dec2hm(r.IN):"—"}</td><td class="mono">${r.EU?dec2hm(r.EU):"—"}</td><td class="mono">${r.PR?dec2hm(r.PR):"—"}</td><td class="mono">$${est.toFixed(2)}</td><td class="mono">${actual!=null?("$"+actual.toFixed(2)):"—"}</td><td>${verdict}</td></tr>`;
+    });
+    let html='<table>'+h+'</table>';
+    const rt=DB.perDiemRates||{};
+    if(rt.rates){
+      html+='<h3 class="psec" style="margin-top:18px">Effective rates in use</h3>';
+      html+='<div class="pcard mono" style="font-size:13px;line-height:1.7">';
+      ["INTL","PACRIM","EURO","DMSTIC"].forEach(k=>{ const rr=rt.rates[k]; if(!rr) return;
+        html+=`<div><b>${k}</b>: $${rr.total.toFixed(3)}/hr (tx $${rr.tx.toFixed(3)} + ntx $${rr.ntx.toFixed(3)})${rr.note?' <span class="muted" style="font-family:system-ui">— '+rr.note+'</span>':''}</div>`; });
+      html+='</div>';
+      if(rt.note) html+='<div class="muted" style="margin-top:8px;font-style:italic">'+rt.note+'</div>';
+      if(rt.asOf) html+='<div class="muted" style="margin-top:4px">Rates as of '+fd(rt.asOf)+' · '+ (rt.source||"") +'</div>';
+    }
+    out.innerHTML=html;
+  }
   function coverageData(){
     const today=new Date(); const iso=d=>d.toISOString().slice(0,10); const T=iso(today);
     const havePc=new Set(PAYCHECKS.map(p=>p.date));
@@ -399,7 +451,7 @@ const PayApp = (function(){
     $('pay_coverageFull').innerHTML=out;
   }
   function goCoverage(){ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); document.querySelector('#payapp .tabs button[data-ptab="coverage"]').classList.add('active'); $('ppanel_coverage').classList.add('active'); }
-  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBalances(); renderSickEvents(); renderCoverage(); renderBid(); renderCal(); renderCheckSel(); }
+  function renderAllPay(){ renderAlerts(); renderPrem(); renderHours(); renderPaychecks(); renderBalances(); renderSickEvents(); renderPerDiem(); renderCoverage(); renderBid(); renderCal(); renderCheckSel(); }
   function wireTabs(){ document.querySelectorAll('#payapp .tabs button').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('#payapp .tabs button').forEach(x=>x.classList.remove('active')); document.querySelectorAll('#payapp .ppanel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('ppanel_'+b.dataset.ptab).classList.add('active'); }; }); }
 
   async function init(){
@@ -414,7 +466,7 @@ const PayApp = (function(){
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const DATA = await res.json();
       CHECKS=DATA.checks||[]; BIDMAP=DATA.bidMap||[]; PAYCHECKS=DATA.paychecks||[]; BANKSTMTS=DATA.bankStatements||[];
-      DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17,sick:DATA.sick||[],sickEvents:DATA.sickEvents||[],sickPolicy:DATA.sickPolicy||{},vacation:DATA.vacation||[],balances:DATA.balances||{}};
+      DB={premiums:DATA.premiums||[],hours:DATA.hours||[],ja:DATA.ja||[],rate:DATA.rate||247.17,sick:DATA.sick||[],sickEvents:DATA.sickEvents||[],sickPolicy:DATA.sickPolicy||{},vacation:DATA.vacation||[],balances:DATA.balances||{},perDiemByTrip:DATA.perDiemByTrip||[],perDiemRates:DATA.perDiemRates||{}};
       const ri=$('pay_rateInput'); ri.value=DB.rate; ri.onchange=()=>{ const v=parseFloat(ri.value); if(v>0){ DB.rate=v; renderLookup(); } };
       renderAllPay();
       const lu = DATA.lastUpdated ? new Date(DATA.lastUpdated).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) : 'unknown';
