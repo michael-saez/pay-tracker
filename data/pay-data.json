@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-21T00:05:00Z",
+  "lastUpdated": "2026-08-21T05:30:52Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -229,6 +229,26 @@
       "blockToBlock": "0:01",
       "registerPeriod": "2026-01-25 to 2026-02-22",
       "note": "Register: 13 duty days, cap 74:25, block paid 32:37, intl premium 54:07, block-to-block 0:01. Sick balance 204:01 (accrued 5:30, no sick used)."
+    },
+    {
+      "pp": "2608",
+      "bid": "2605",
+      "sched": "77:25",
+      "line": "84:14",
+      "pay": "84:14",
+      "note": "Register: 13 duty days, cap 73:22, block paid 50:11, intl premium 68:53, 4:00 training on a day off, 4:00 sick (7/22), 6:00 banked vacation used. No JA this period.",
+      "beginLine": "77:25",
+      "endLine": "84:14",
+      "beginPay": "77:25",
+      "endPay": "84:14",
+      "dutyDays": 13,
+      "creditCap": "73:22",
+      "blockPaid": "50:11",
+      "intlPremium": "68:53",
+      "trainingDayOff": "4:00",
+      "sickUsed": "4:00",
+      "vacBankedUsed": "6:00",
+      "registerPeriod": "2026-07-12 to 2026-08-09"
     }
   ],
   "ja": [
@@ -909,13 +929,13 @@
     }
   ],
   "balances": {
-    "asOf": "2026-07-12",
-    "source": "UPS Flight Payroll Register PP 06/14/26-07/12/26",
-    "sickBalance": "213:44",
+    "asOf": "2026-08-09",
+    "source": "UPS Flight Payroll Register PP 07/12/26-08/09/26",
+    "sickBalance": "215:14",
     "sickAccrualPerPeriod": "5:30",
     "sickUsedPeriod": "4:00",
-    "vacationBanked": "15:00",
-    "vacationBankedUsed": "18:00",
+    "vacationBanked": "9:00",
+    "vacationBankedUsed": "6:00",
     "perDiem": {
       "DM": "74:32",
       "IN": "25:10",
@@ -979,6 +999,14 @@
       "accrued": "5:30",
       "balance": "213:44",
       "memo": "4:00 sick 7/11. Register PP 06/14-07/12."
+    },
+    {
+      "pp": "2608",
+      "periodEnd": "2026-08-09",
+      "used": "4:00",
+      "accrued": "5:30",
+      "balance": "215:14",
+      "memo": "4:00 sick 7/22. Register PP 07/12-08/09. Chain-check: 213:44 - 4:00 + 5:30 = 215:14 \u2713."
     }
   ],
   "vacation": [
@@ -1002,6 +1030,13 @@
       "banked": "15:00",
       "bankedUsed": "18:00",
       "memo": "18:00 banked vacation used 6/30-7/05."
+    },
+    {
+      "pp": "2608",
+      "periodEnd": "2026-08-09",
+      "banked": "9:00",
+      "bankedUsed": "6:00",
+      "memo": "6:00 banked vacation used (7/15-7/16). Chain-check: 15:00 - 6:00 = 9:00 \u2713."
     }
   ],
   "sickPolicy": {
@@ -1034,10 +1069,10 @@
     {
       "date": "2026-07-22",
       "pp": "2608",
-      "hours": "",
+      "hours": "4:00",
       "trip": "",
       "calledFrom": "",
-      "note": "Logged manually. Hours pending the PP2608 register.",
+      "note": "4:00 sick charged on the PP2608 register (07/12-08/09).",
       "counts": "yes"
     }
   ],
