@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-21T05:30:52Z",
+  "lastUpdated": "2026-08-21T05:42:51Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -935,13 +935,7 @@
     "sickAccrualPerPeriod": "5:30",
     "sickUsedPeriod": "4:00",
     "vacationBanked": "9:00",
-    "vacationBankedUsed": "6:00",
-    "perDiem": {
-      "DM": "74:32",
-      "IN": "25:10",
-      "EU": "36:25",
-      "PR": "156:08"
-    }
+    "vacationBankedUsed": "6:00"
   },
   "sick": [
     {
@@ -1124,6 +1118,46 @@
       "received": true,
       "source": "ClientStatements_5594_073126.pdf",
       "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    }
+  ],
+  "perDiemByTrip": [
+    {
+      "pp": "2607",
+      "trip": "A70736",
+      "dateRange": "2026-06-13 to 2026-06-20",
+      "IN": "10:15",
+      "EU": "33:27",
+      "PR": "117:38"
+    },
+    {
+      "pp": "2607",
+      "trip": "53064",
+      "dateRange": "2026-06-23 to 2026-06-30",
+      "DM": "74:32",
+      "IN": "14:55",
+      "EU": "36:25",
+      "PR": "38:30"
+    },
+    {
+      "pp": "2608",
+      "trip": "A70518",
+      "dateRange": "2026-07-28 to 2026-07-29",
+      "IN": "16:24",
+      "PR": "28:50"
+    },
+    {
+      "pp": "2608",
+      "trip": "26731",
+      "dateRange": "2026-07-31 to 2026-08-03",
+      "IN": "24:20",
+      "PR": "49:33"
+    },
+    {
+      "pp": "2608",
+      "trip": "12822",
+      "dateRange": "2026-08-04 to 2026-08-08",
+      "IN": "20:53",
+      "PR": "82:06"
     }
   ]
 }
