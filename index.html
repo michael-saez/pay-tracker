@@ -191,7 +191,7 @@ const PayApp = (function(){
     const cell=o=>{ if(!o) return "—"; const ok=toMin(o.actual)===toMin(o.expected); return `<span class="mono">${o.actual||"—"}</span>${ok?"":` <span class="muted">(exp ${o.expected})</span>`}`; };
     let h="<tr><th>Pay Date</th><th>Verdict</th><th>Base</th><th>Overage</th><th>Premiums</th><th>Net</th><th>Note</th></tr>";
     rows.forEach(p=>{ const st=(p.status||"unverified").toLowerCase();
-      h+=`<tr><td>${fd(p.date)}</td><td><span class="pill ${st}">${p.status||"unverified"}</span></td><td>${cell(p.base)}</td><td>${cell(p.overage)}</td><td>${cell(p.premium)}</td><td class="mono">${p.net?("$"+Number(p.net).toLocaleString("en-US",{minimumFractionDigits:2})):"—"}</td><td class="muted">${p.note||""}</td></tr>`; });
+      h+=`<tr><td>${fd(p.date)}</td><td><span class="pill ${st}">${p.status||"unverified"}</span></td><td>${cell(p.base)}</td><td>${cell(p.overage)}</td><td>${cell(p.premium)}</td><td class="mono" style="font-weight:600">${p.net?("$"+Number(p.net).toLocaleString("en-US",{minimumFractionDigits:2})):"—"}</td><td class="muted">${p.note||""}</td></tr>`; });
     out.innerHTML=`<table>${h}</table>`;
     const bad=PAYCHECKS.filter(p=>(p.status||"").toLowerCase()==="underpaid");
     if(bad.length) out.insertAdjacentHTML("afterbegin",`<div class="alert"><b>⚠ ${bad.length} check(s) flagged underpaid:</b> ${bad.map(b=>fd(b.date)).join(", ")}.</div>`);
@@ -232,7 +232,9 @@ const PayApp = (function(){
     const pendMin=due.filter(p=>p.status!=="Approved").reduce((s,p)=>s+eff(p),0);
     const totalMin=BASE_CHECK_MIN+overMin+jaBonus+apprMin;
     const pc=PAYCHECKS.find(p=>p.date===date); let banner="";
-    if(pc){ const st=(pc.status||"unverified").toLowerCase(); banner=`<div class="${st==="underpaid"?"alert":"note"}" style="margin-bottom:14px">Reconciled against deposit advice — <span class="pill ${st}">${pc.status}</span>. ${pc.note||""}</div>`; }
+    if(pc){ const st=(pc.status||"unverified").toLowerCase();
+      const netHtml=pc.net?`<div style="margin-top:6px">Expected bank deposit: <b class="mono" style="font-size:1.1em">$${Number(pc.net).toLocaleString("en-US",{minimumFractionDigits:2})}</b> <span class="muted">— match this against your deposit notification</span></div>`:"";
+      banner=`<div class="${st==="underpaid"?"alert":"note"}" style="margin-bottom:14px">Reconciled against deposit advice — <span class="pill ${st}">${pc.status}</span>. ${pc.note||""}${netHtml}</div>`; }
     const totalLbl="base + overage"+(jaNom?" + JA":"")+" + premiums";
     let h=banner+`<div class="pcard" style="border-left:4px solid #caa84a"><div class="muted">Total estimated paid this check — ${totalLbl}</div><div class="big">${fm(totalMin)}</div><div class="muted">${fm(totalMin)} × $${DB.rate}/hr ≈ <b>${money(totalMin)}</b>${pendMin?(" · +"+fm(pendMin)+" ("+money(pendMin)+") if pending approves"):""}</div></div>`;
     const ovBig=isOver?fm(jaNom?overNonJa:overMin):"—";
