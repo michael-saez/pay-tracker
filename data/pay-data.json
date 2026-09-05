@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-21T06:27:09Z",
+  "lastUpdated": "2026-09-05T03:14:09Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -1193,6 +1193,12 @@
       "month": "2026-07",
       "received": true,
       "source": "ClientStatements_5594_073126.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-08",
+      "received": true,
+      "source": "statementpdf.pdf",
       "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
     }
   ],
