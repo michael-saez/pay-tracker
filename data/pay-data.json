@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-05T03:14:09Z",
+  "lastUpdated": "2026-10-01T07:59:45Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -92,6 +92,15 @@
       "hours": "02:00",
       "status": "Approved",
       "memo": "L/O ICN ISO HKG \u2014 approved, verified #5141930 on 8/3/2026"
+    },
+    {
+      "pp": "2610",
+      "trip": "A70789",
+      "date": "2026-09-18",
+      "code": "AP2",
+      "hours": "02:00",
+      "status": "Approved",
+      "memo": "AP2 D/T extended L/O in CDG aft 4/17Z, cnl D/T CPT fat call \u2014 approved, verified #0397610 on 9/21/2026"
     }
   ],
   "hours": [
@@ -191,7 +200,8 @@
       "jaAboveGuarantee": "44:21",
       "sickUsed": "4:00",
       "vacBankedUsed": "18:00",
-      "registerPeriod": "2026-06-14 to 2026-07-12"
+      "registerPeriod": "2026-06-14 to 2026-07-12",
+      "registerVerified": "126:59"
     },
     {
       "pp": "2601",
@@ -248,7 +258,27 @@
       "trainingDayOff": "4:00",
       "sickUsed": "4:00",
       "vacBankedUsed": "6:00",
-      "registerPeriod": "2026-07-12 to 2026-08-09"
+      "registerPeriod": "2026-07-12 to 2026-08-09",
+      "registerVerified": "84:14"
+    },
+    {
+      "pp": "2609",
+      "bid": "2605",
+      "sched": "74:54",
+      "line": "75:01",
+      "pay": "75:01",
+      "registerVerified": "75:01",
+      "beginLine": "74:54",
+      "beginPay": "75:00",
+      "endLine": "75:01",
+      "endPay": "75:01",
+      "dutyDays": 13,
+      "creditCap": "75:01",
+      "blockPaid": "36:40",
+      "intlPremium": "45:10",
+      "blockToBlock": "0:39",
+      "registerPeriod": "2026-08-09 to 2026-09-06",
+      "note": "Register: 13 duty days, cap 75:01, block paid 36:40, intl premium 45:10, block-to-block 0:39. No JA, no sick, no vacation used this period. Overage 0:01 (75:01 - 75:00). Trip board EPIP 0:06."
     }
   ],
   "ja": [
@@ -1005,13 +1035,13 @@
     }
   ],
   "balances": {
-    "asOf": "2026-08-09",
-    "source": "UPS Flight Payroll Register PP 07/12/26-08/09/26",
-    "sickBalance": "215:14",
+    "asOf": "2026-09-06",
+    "source": "UPS Flight Payroll Register PP 08/09/26-09/06/26",
+    "sickBalance": "220:44",
     "sickAccrualPerPeriod": "5:30",
-    "sickUsedPeriod": "4:00",
+    "sickUsedPeriod": "0:00",
     "vacationBanked": "9:00",
-    "vacationBankedUsed": "6:00"
+    "vacationBankedUsed": "0:00"
   },
   "sick": [
     {
@@ -1077,6 +1107,14 @@
       "accrued": "5:30",
       "balance": "215:14",
       "memo": "4:00 sick 7/22. Register PP 07/12-08/09. Chain-check: 213:44 - 4:00 + 5:30 = 215:14 \u2713."
+    },
+    {
+      "pp": "2609",
+      "periodEnd": "2026-09-06",
+      "used": "",
+      "accrued": "5:30",
+      "balance": "220:44",
+      "memo": "No sick used. Register PP 08/09-09/06. Chain-check: 215:14 - 0:00 + 5:30 = 220:44 \u2713."
     }
   ],
   "vacation": [
@@ -1107,6 +1145,13 @@
       "banked": "9:00",
       "bankedUsed": "6:00",
       "memo": "6:00 banked vacation used (7/15-7/16). Chain-check: 15:00 - 6:00 = 9:00 \u2713."
+    },
+    {
+      "pp": "2609",
+      "periodEnd": "2026-09-06",
+      "banked": "9:00",
+      "bankedUsed": "",
+      "memo": "No banked vacation used. Chain-check: 9:00 - 0:00 = 9:00 \u2713."
     }
   ],
   "sickPolicy": {
