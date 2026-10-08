@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-01T08:12:39Z",
+  "lastUpdated": "2026-10-08T07:59:00Z",
   "schemaVersion": 2,
   "rate": 247.17,
   "premiums": [
@@ -693,6 +693,16 @@
         "expected": "00:01"
       },
       "note": "Deposit advice #340277540 (PP 9/6-9/19/26, rate $247.17). Overage check for PP2609: OVER GUARANTEE 0.0200 hrs = $4.94 vs expected 0:01 (register end pay 75:01 - 75:00; no JA) - match within rounding. PREMIUM PAY and JUNIOR 150% show no current-period amount, correct since no approved PP2609 premiums or JA are on file. Untracked extras: INTL PREMIUM 55.08 units x $4.50 = $247.86 - NOTE this is 9:55 higher than the PP2609 register INTL PREMIUM of 45:10 (45.17); unexplained, paid in Michael's favor, worth a glance. Per diem TX/NTX lines paid (DOMICILE 6.58, DMSTIC 29.02, INTL 51.08, PACRIM 99.05 units; reimbursements $634.11). Note PP2610 AP2 (A70789, 2:00) will appear on the 10/19 check."
+    },
+    {
+      "date": "2026-10-05",
+      "net": "7097.97",
+      "status": "match",
+      "base": {
+        "actual": "37:30",
+        "expected": "37:30"
+      },
+      "note": "Deposit advice #349740205 (PP 9/20-10/3/26, rate $247.17). Base-only check for PP2610: ADV NEXT PAY 37.5000 hrs = $9,268.88; no overage/premium/JA on this check per checks[] calendar. Net chain-checks: 9,268.88 - 127.55 pre-tax - 1,378.01 taxes - 665.35 post-tax = 7,097.97. Deposited to acct ending 5594. Untracked: excess life $5.31 taxable benefit; post-tax incl. LTD $164.06, union dues $208.55, mutual aid $115.00, FID 401K loan $92.91. PP2610 AP2 (A70789, 2:00) is expected on the 10/19 overage check."
     }
   ],
   "checks": [
@@ -1268,6 +1278,12 @@
       "month": "2026-08",
       "received": true,
       "source": "ClientStatements_5594_083126.pdf",
+      "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
+    },
+    {
+      "month": "2026-09",
+      "received": true,
+      "source": "ClientStatements_5594_093026.pdf",
       "note": "Morgan Stanley/E*TRADE Max-Rate Checking"
     }
   ],
